@@ -6,6 +6,10 @@
   color: #ffffff !important;
 }
 
+.ant-menu-item-selected {
+  color: #ffffff !important;
+}
+
 .ant-skeleton-avatar.ant-skeleton-avatar-sm {
   width: 32px !important;
   height: 32px !important;
@@ -41,6 +45,11 @@
 
 .ant-tooltip {
   font-size: 16px !important;
+}
+
+:where(.css-dev-only-do-not-override-dxd93w).ant-tooltip .ant-tooltip-inner {
+  min-height: fit-content !important;
+  background-color: #18181b !important;
 }
 
 .ant-menu-title-content {

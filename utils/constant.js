@@ -1,4 +1,11 @@
-import { ChartPie, KeyRound, LogOut, UsersRound } from "lucide-react";
+import {
+  LayoutDashboard,
+  KeyRound,
+  LogOut,
+  UsersRound,
+  LayoutList,
+  Box,
+} from "lucide-react";
 import Link from "next/link";
 
 export const AUTH_TOKEN_KEY = "AUTH_TOKEN";
@@ -8,10 +15,10 @@ export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export const generateProfileDropdownOptions = (role) => {
   return [
     {
-      key: `/dashboard/${role}/profile`,
+      key: `/${role}/dashboard/profile`,
       label: (
         <Link
-          href={`/dashboard/${role}/profile`}
+          href={`/${role}/dashboard/profile`}
           className="flex items-center gap-2"
         >
           <UsersRound className="size-5" /> Profile
@@ -56,7 +63,12 @@ function getItem(label, key, icon, children) {
 
 export const getSidebarItems = (role) => {
   const SUPER_ADMIN = [
-    getItem("Dashboard", "/dashboard/super-admin", <ChartPie />),
+    getItem("Dashboard", "/super-admin/dashboard", <LayoutDashboard />),
+    getItem("Category", "", <LayoutList />, [
+      getItem("Category List", "/super-admin/category"),
+      getItem("Add Category", "/super-admin/category/add"),
+    ]),
+    getItem("Product", "/super-admin/product", <Box />),
   ];
 
   switch (role) {
@@ -68,14 +80,3 @@ export const getSidebarItems = (role) => {
       return [];
   }
 };
-
-export const GENDER_OPTIONS = [
-  {
-    value: "MALE",
-    label: "Male",
-  },
-  {
-    value: "FEMALE",
-    label: "Female",
-  },
-];

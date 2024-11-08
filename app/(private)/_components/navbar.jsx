@@ -2,10 +2,12 @@
 
 import { Avatar, Drawer, Dropdown, Skeleton, Menu as AntMenu } from "antd";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
+import logo from "@/public/images/logo/logo.svg";
 import { useGetProfileQuery } from "@/redux/api/profileApi";
 import UserProfile from "./user-profile";
 import UserProfileBox from "./user-profile-box";
@@ -42,7 +44,15 @@ export default function Navbar() {
     <div className="sticky top-0 z-50 bg-white shadow">
       <div className="py-2 pl-4 pr-6 sm:px-8">
         <div className="flex items-center justify-between gap-2 xs:gap-5">
-          <Link href={isLoading ? "#" : `/${role}/dashboard`}>LETZ GEAR</Link>
+          <Link href={isLoading ? "#" : `/${role}/dashboard`}>
+            <Image
+              src={logo}
+              alt="telehealth logo"
+              className="w-auto cursor-pointer max-xs:h-5 xs:h-8 sm:h-10"
+              quality={100}
+              loading="eager"
+            />
+          </Link>
 
           {/* For small screens */}
           <div className="hidden items-center gap-3 max-md:flex">

@@ -29,7 +29,12 @@ export default function Sidebar({ children }) {
             collapsible
             collapsed={collapsed}
             onCollapse={(value) => setCollapsed(value)}
-            style={{ overflow: "auto", height: "100vh", position: "fixed" }}
+            style={{
+              overflow: "auto",
+              height: "100vh",
+              position: "fixed",
+            }}
+            width={300}
           >
             <Menu
               selectedKeys={[pathname]}
