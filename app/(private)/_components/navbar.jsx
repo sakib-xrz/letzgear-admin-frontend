@@ -42,7 +42,7 @@ export default function Navbar() {
     <div className="sticky top-0 z-50 bg-white shadow">
       <div className="py-2 pl-4 pr-6 sm:px-8">
         <div className="flex items-center justify-between gap-2 xs:gap-5">
-          <Link href={isLoading ? "#" : `/dashboard/${role}`}>LETZ GEAR</Link>
+          <Link href={isLoading ? "#" : `/${role}/dashboard`}>LETZ GEAR</Link>
 
           {/* For small screens */}
           <div className="hidden items-center gap-3 max-md:flex">

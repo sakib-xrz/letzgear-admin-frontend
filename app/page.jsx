@@ -1,14 +1,27 @@
-import { Button } from "antd";
+"use client";
+
+import { getUserInfo } from "@/utils/auth";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
+  const router = useRouter();
+  const user = getUserInfo();
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/login");
+    } else {
+      router.push(
+        `/${user?.role === "SUPER_ADMIN" ? "super-admin" : role.toLowerCase()}/dashboard`,
+      );
+    }
+  });
+
   return (
-    <div className="mt-20 flex justify-center gap-5">
-      <Button type="primary">Primary Button</Button>
-      <Button type="default">Primary Button</Button>
-      <Button type="dashed">Primary Button</Button>
-      <Button danger type="primary">
-        Primary Button
-      </Button>
+    <div className="flex h-screen items-center justify-center">
+      <Loader2 size={32} className="animate-spin text-primary" />
     </div>
   );
 }

@@ -1,12 +1,4 @@
-import {
-  BriefcaseMedical,
-  ChartPie,
-  KeyRound,
-  LogOut,
-  UserRoundCog,
-  UserRoundPlus,
-  UsersRound,
-} from "lucide-react";
+import { ChartPie, KeyRound, LogOut, UsersRound } from "lucide-react";
 import Link from "next/link";
 
 export const AUTH_TOKEN_KEY = "AUTH_TOKEN";
@@ -65,34 +57,6 @@ function getItem(label, key, icon, children) {
 export const getSidebarItems = (role) => {
   const SUPER_ADMIN = [
     getItem("Dashboard", "/dashboard/super-admin", <ChartPie />),
-    getItem(
-      "Admins",
-      "/dashboard/super-admin/admins-options",
-      <UserRoundCog />,
-      [
-        getItem("Admins List", "/dashboard/super-admin/admins"),
-        getItem("Create Admin", "/dashboard/super-admin/admins/create"),
-      ],
-    ),
-    getItem(
-      "Doctors",
-      "/dashboard/super-admin/doctors-options",
-      <BriefcaseMedical />,
-      [
-        getItem("Doctors List", "/dashboard/super-admin/doctors"),
-        getItem("Create Doctor", "/dashboard/super-admin/doctors/create"),
-      ],
-    ),
-    getItem("Patients", "/dashboard/super-admin/patients", <UserRoundPlus />),
-    getItem("Users", "/dashboard/super-admin/users", <UsersRound />),
-  ];
-
-  const ADMIN = [
-    getItem("Dashboard", "/dashboard/admin", <ChartPie />),
-    getItem("Admins", "/dashboard/admin/admins", <UserRoundCog />),
-    getItem("Doctors", "/dashboard/admin/doctors", <BriefcaseMedical />),
-    getItem("Patients", "/dashboard/admin/patients", <UserRoundPlus />),
-    getItem("Users", "/dashboard/admin/users", <UsersRound />),
   ];
 
   switch (role) {

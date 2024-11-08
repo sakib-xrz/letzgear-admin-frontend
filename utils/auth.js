@@ -6,7 +6,6 @@ import {
   setToLocalStorage,
 } from "./localStorage";
 import axiosInstance from "@/helpers/axiosInstance";
-import removeAccessToken from "@/actions/removeAccessToken";
 
 export const storeUserInfo = (token) => {
   return setToLocalStorage(AUTH_TOKEN_KEY, token);
