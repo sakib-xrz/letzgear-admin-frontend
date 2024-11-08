@@ -2,6 +2,14 @@
   "name": "letzgear-admin-frontend",
   "version": "0.1.0",
   "private": true,
+  "author": {
+    "name": "Md Sakibul Islam",
+    "email": "sakibul.islam0808@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sakib-xrz/letzgear-admin-frontend"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
