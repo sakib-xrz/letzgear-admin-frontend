@@ -5,7 +5,7 @@ import { Button, Modal, Result } from "antd";
 import FormInput from "@/components/form/form-input";
 import { useFormik } from "formik";
 import { useState } from "react";
-// import { useChangePasswordMutation } from "@/redux/api/userApi";
+import { useChangePasswordMutation } from "@/redux/api/authApi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { getUserInfo } from "@/utils/auth";
@@ -19,7 +19,7 @@ export default function ChangePassword() {
   const user = getUserInfo();
   const role = getUserRoleForRoute(user);
 
-  // const [changePassword] = useChangePasswordMutation();
+  const [changePassword] = useChangePasswordMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -50,14 +50,14 @@ export default function ChangePassword() {
         newPassword: values.newPassword,
       };
 
-      // try {
-      //   await changePassword(payload).unwrap();
-      //   setOpenModal(true);
-      // } catch (error) {
-      //   toast.error(error.message || "Failed to change password");
-      // } finally {
-      //   setLoading(false);
-      // }
+      try {
+        await changePassword(payload).unwrap();
+        setOpenModal(true);
+      } catch (error) {
+        toast.error(error.message || "Failed to change password");
+      } finally {
+        setLoading(false);
+      }
     },
   });
 
@@ -111,7 +111,7 @@ export default function ChangePassword() {
           }}
           onCancel={() => {
             setOpenModal(false);
-            router.push(`/dashboard/${role}`);
+            router.push(`/${role}/dashboard`);
           }}
         >
           <Result

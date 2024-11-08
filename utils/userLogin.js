@@ -2,6 +2,7 @@ import axiosInstance from "@/helpers/axiosInstance";
 import { storeUserInfo } from "./auth";
 import { BASE_URL } from "./constant";
 import setAccessToken from "@/actions/setAccessToken";
+import { jwtDecode } from "jwt-decode";
 
 const userLogin = async (payload) => {
   const urlParams = new URLSearchParams(window?.location?.search);
@@ -20,10 +21,13 @@ const userLogin = async (payload) => {
     const { accessToken, need_password_change } = response?.data || {};
 
     if (accessToken) {
+      const { role } = jwtDecode(accessToken);
       storeUserInfo(accessToken);
       setAccessToken(accessToken, {
         need_password_change,
-        redirect: existingRedirectURL ? existingRedirectURL : "/dashboard",
+        redirect: existingRedirectURL
+          ? existingRedirectURL
+          : `/${role === "SUPER_ADMIN" ? "super-admin" : role.toLowerCase()}/dashboard`,
       });
     }
 

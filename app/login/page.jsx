@@ -24,8 +24,8 @@ export default function Login() {
 
   const formik = useFormik({
     initialValues: {
-      email: "superadmin@letzgear.com",
-      password: "admin",
+      email: "",
+      password: "",
     },
     validationSchema: loginSchema,
     onSubmit: async (values) => {
