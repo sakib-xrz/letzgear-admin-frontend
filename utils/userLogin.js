@@ -22,6 +22,11 @@ const userLogin = async (payload) => {
 
     if (accessToken) {
       const { role } = jwtDecode(accessToken);
+
+      if (role === "CUSTOMER") {
+        throw new Error("You are not allowed to access this page");
+      }
+
       storeUserInfo(accessToken);
       setAccessToken(accessToken, {
         need_password_change,

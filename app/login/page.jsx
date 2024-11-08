@@ -35,6 +35,7 @@ export default function Login() {
         await userLogin(values);
         toast.success("Logged in successfully");
       } catch (error) {
+        formik.resetForm();
         toast.error(error.message || "Failed to login");
       } finally {
         setLoading(false);
