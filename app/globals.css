@@ -2,20 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+.ant-dropdown-menu-item-selected {
+  color: #ffffff !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.ant-skeleton-avatar.ant-skeleton-avatar-sm {
+  width: 32px !important;
+  height: 32px !important;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+.ant-drawer-header {
+  padding: 1px 16px 1px 8px !important;
+}
+
+.ant-layout-sider {
+  background-color: #ffffff !important;
+}
+
+.ant-layout-sider-trigger {
+  background-color: #0f766e !important;
+}
+
+.ant-menu-inline-collapsed > .ant-menu-item {
+  padding-inline: calc(50% - 10px - 8px) !important;
+}
+
+.ant-menu-item-icon {
+  vertical-align: -7px !important;
+}
+
+.ant-menu-inline-collapsed > .ant-menu-submenu > .ant-menu-submenu-title {
+  padding-inline: calc(50% - 10px - 8px) !important;
+}
+
+.ant-drawer-body {
+  padding: 0 !important;
+}
+
+.ant-tooltip {
+  font-size: 16px !important;
+}
+
+.ant-menu-title-content {
+  font-weight: 600 !important;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
 }
