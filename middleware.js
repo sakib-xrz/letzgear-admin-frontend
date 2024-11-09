@@ -7,7 +7,7 @@ const AuthRoutes = ["/login"];
 const commonPrivateRoutes = ["/change-password"];
 
 const roleBasedPrivateRoutes = {
-  SUPER_ADMIN: [/^\/super-admin/],
+  SUPER_ADMIN: [/^\/super-admin/], // means any route starting with /super-admin
 };
 
 export function middleware(request) {
