@@ -2,7 +2,7 @@ import GlobalProvider from "@/components/shared/global-provider";
 import "./globals.css";
 
 export const metadata = {
-  title: "LETZ GEAR ADMIN",
+  title: "LET'Z GEAR",
   description: "",
 };
 

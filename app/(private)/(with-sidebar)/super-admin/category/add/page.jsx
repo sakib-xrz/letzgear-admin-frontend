@@ -14,6 +14,7 @@ import { useFormik } from "formik";
 import { ImageUp, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import * as Yup from "yup";
 
 const items = [
   {
@@ -40,6 +41,13 @@ export default function AddCategory() {
       route: "",
       image: null,
     },
+    validationSchema: Yup.object().shape({
+      name: Yup.string().required("Name is required"),
+      route: Yup.string()
+        .required("URL is required")
+        .matches(/^\//, "URL must start with '/'")
+        .matches(/^[a-z-/]*$/, "Only lowercase letters and '-' are allowed."),
+    }),
     onSubmit: async (values) => {
       const formData = new FormData();
       formData.append("name", values.name);
