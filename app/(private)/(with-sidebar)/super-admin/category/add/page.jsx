@@ -3,10 +3,11 @@
 import FormInput from "@/components/form/form-input";
 import Label from "@/components/shared/label";
 import Title from "@/components/shared/title";
+import { useGetCategoriesQuery } from "@/redux/api/categoryApi";
 import { Breadcrumb, Button, Cascader } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import { useFormik } from "formik";
-import { ImageUp } from "lucide-react";
+import { ImageUp, Loader2 } from "lucide-react";
 import Link from "next/link";
 
 const options = [
@@ -57,18 +58,27 @@ const items = [
 ];
 
 export default function AddCategory() {
+  const { data, isLoading } = useGetCategoriesQuery();
+
   const formik = useFormik({
     initialValues: {
       parent_category_id: "",
       name: "",
       route: "",
-      image: "",
+      image: null,
     },
   });
 
-  const onChange = (value) => {
-    console.log(value);
-  };
+  if (isLoading) {
+    return (
+      <div className="flex h-[calc(100svh-130px)] items-center justify-center">
+        <Loader2 size={32} className="animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  console.log(data?.data);
+
   return (
     <div className="space-y-5 lg:space-y-10">
       <Breadcrumb items={items} />
@@ -83,7 +93,7 @@ export default function AddCategory() {
               </Label>
               <Cascader
                 options={options}
-                onChange={onChange}
+                // onChange={onChange}
                 changeOnSelect
                 className="!w-full"
               />
