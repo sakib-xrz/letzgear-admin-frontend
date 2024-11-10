@@ -3,13 +3,17 @@
 import FormInput from "@/components/form/form-input";
 import Label from "@/components/shared/label";
 import Title from "@/components/shared/title";
-import { useGetCategoriesQuery } from "@/redux/api/categoryApi";
+import {
+  useCreateCategoryMutation,
+  useGetCategoriesQuery,
+} from "@/redux/api/categoryApi";
 import { transformCategories } from "@/utils/constant";
 import { Breadcrumb, Button, Cascader } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import { useFormik } from "formik";
 import { ImageUp, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
 
 const items = [
   {
@@ -26,6 +30,9 @@ const items = [
 export default function AddCategory() {
   const { data, isLoading } = useGetCategoriesQuery();
 
+  const [createCategory, { isLoading: isCreateCategoryLoading }] =
+    useCreateCategoryMutation();
+
   const formik = useFormik({
     initialValues: {
       parent_category_id: null,
@@ -33,8 +40,20 @@ export default function AddCategory() {
       route: "",
       image: null,
     },
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+      const formData = new FormData();
+      formData.append("name", values.name);
+      formData.append("route", values.route);
+      formData.append("parent_category_id", values.parent_category_id);
+      formData.append("image", values.image);
+
+      try {
+        await createCategory(formData).unwrap();
+        formik.resetForm();
+        toast.success("Category created successfully");
+      } catch (error) {
+        toast.error(error?.message || "Failed to create category");
+      }
     },
   });
 
@@ -104,7 +123,7 @@ export default function AddCategory() {
                 onChange={({ file }) => {
                   formik.setFieldValue("image", file?.originFileObj);
                 }}
-                fileList={formik.values.file ? [formik.values.file] : []}
+                fileList={formik.values.image ? [formik.values.image] : []}
               >
                 <p className="flex justify-center">
                   <ImageUp className="size-8 opacity-70" />
@@ -123,7 +142,7 @@ export default function AddCategory() {
             type="primary"
             htmlType="submit"
             className="w-full"
-            // loading={isLoading}
+            loading={isCreateCategoryLoading}
           >
             Create Category
           </Button>
