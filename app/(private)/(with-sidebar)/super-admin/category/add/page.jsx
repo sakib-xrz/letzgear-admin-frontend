@@ -4,46 +4,12 @@ import FormInput from "@/components/form/form-input";
 import Label from "@/components/shared/label";
 import Title from "@/components/shared/title";
 import { useGetCategoriesQuery } from "@/redux/api/categoryApi";
+import { transformCategories } from "@/utils/constant";
 import { Breadcrumb, Button, Cascader } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import { useFormik } from "formik";
 import { ImageUp, Loader2 } from "lucide-react";
 import Link from "next/link";
-
-const options = [
-  {
-    value: "zhejiang",
-    label: "Zhejiang",
-    children: [
-      {
-        value: "hangzhou",
-        label: "Hanzhou",
-        children: [
-          {
-            value: "xihu",
-            label: "West Lake",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    value: "jiangsu",
-    label: "Jiangsu",
-    children: [
-      {
-        value: "nanjing",
-        label: "Nanjing",
-        children: [
-          {
-            value: "zhonghuamen",
-            label: "Zhong Hua Men",
-          },
-        ],
-      },
-    ],
-  },
-];
 
 const items = [
   {
@@ -62,10 +28,13 @@ export default function AddCategory() {
 
   const formik = useFormik({
     initialValues: {
-      parent_category_id: "",
+      parent_category_id: null,
       name: "",
       route: "",
       image: null,
+    },
+    onSubmit: (values) => {
+      console.log(values);
     },
   });
 
@@ -77,7 +46,7 @@ export default function AddCategory() {
     );
   }
 
-  console.log(data?.data);
+  const options = transformCategories(data?.data);
 
   return (
     <div className="space-y-5 lg:space-y-10">
@@ -93,7 +62,12 @@ export default function AddCategory() {
               </Label>
               <Cascader
                 options={options}
-                // onChange={onChange}
+                onChange={(value) => {
+                  formik.setFieldValue(
+                    "parent_category_id",
+                    value?.length ? value[value?.length - 1] : null,
+                  );
+                }}
                 changeOnSelect
                 className="!w-full"
               />
@@ -117,7 +91,12 @@ export default function AddCategory() {
             </div>
 
             <div className="space-y-1">
-              <Label htmlFor={"image"}>Category Image</Label>
+              <Label htmlFor={"image"}>
+                Image{" "}
+                <small className="text-blue-600">
+                  (Recommended size: 1200x725)
+                </small>
+              </Label>
               <Dragger
                 maxCount={1}
                 multiple={false}

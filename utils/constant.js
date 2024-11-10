@@ -80,3 +80,17 @@ export const getSidebarItems = (role) => {
       return [];
   }
 };
+
+export function transformCategories(data) {
+  return data.map((category) => transformCategory(category));
+}
+
+function transformCategory(category) {
+  return {
+    value: category.id,
+    label: category.name,
+    children: (category.sub_categories || []).map((subCategory) =>
+      transformCategory(subCategory),
+    ),
+  };
+}
