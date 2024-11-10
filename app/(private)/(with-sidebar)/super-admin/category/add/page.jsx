@@ -48,8 +48,9 @@ export default function AddCategory() {
       formData.append("image", values.image);
 
       try {
-        await createCategory(formData).unwrap();
+        await createCategory(formData);
         formik.resetForm();
+        formik.setFieldValue("parent_category_id", null);
         toast.success("Category created successfully");
       } catch (error) {
         toast.error(error?.message || "Failed to create category");
