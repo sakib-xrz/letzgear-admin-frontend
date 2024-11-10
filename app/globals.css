@@ -56,6 +56,18 @@
   font-weight: 600 !important;
 }
 
+.ant-cascader-menu-item-active {
+  color: #ffffff !important;
+}
+
+.ant-cascader-menu-item-active .ant-cascader-menu-item-expand-icon {
+  color: #ffffff !important;
+}
+
+.ant-upload-drag {
+  background-color: #ffffff !important;
+}
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
