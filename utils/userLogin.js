@@ -28,12 +28,13 @@ const userLogin = async (payload) => {
       }
 
       storeUserInfo(accessToken);
-      setAccessToken(accessToken, {
+      await setAccessToken(accessToken, {
         need_password_change,
         redirect: existingRedirectURL
           ? existingRedirectURL
           : `/${role === "SUPER_ADMIN" ? "super-admin" : role.toLowerCase()}/dashboard`,
       });
+      window.location.reload();
     }
 
     return response;
