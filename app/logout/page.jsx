@@ -15,7 +15,7 @@ export default function Logout() {
       await logout();
       removeUserInfo();
       await removeAccessToken();
-      router.push("/login");
+      window.location.href = "/login";
     };
 
     logOut();
