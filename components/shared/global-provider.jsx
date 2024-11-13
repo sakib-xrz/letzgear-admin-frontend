@@ -10,7 +10,7 @@ import { Toaster } from "sonner";
 export default function GlobalProvider({ children }) {
   return (
     <Provider store={store}>
-      <Toaster position="top-center" />
+      <Toaster position="top-center" richColors />
       <AntdRegistry>
         <ConfigProvider theme={themeConfig}>{children}</ConfigProvider>
       </AntdRegistry>{" "}

@@ -1,12 +1,17 @@
 "use client";
 
 import TitleWithButton from "@/components/shared/title-with-button";
-import { useGetCategoriesQuery } from "@/redux/api/categoryApi";
+import {
+  useChangeCategoryStatusMutation,
+  useDeleteCategoryMutation,
+  useGetCategoriesQuery,
+} from "@/redux/api/categoryApi";
 import { transformCategories } from "@/utils";
-import { Breadcrumb, Table, Modal, Button } from "antd";
-const { confirm } = Modal;
+import { Breadcrumb, Table, Modal, Button, Switch } from "antd";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const items = [
   {
@@ -17,31 +22,17 @@ const items = [
   },
 ];
 
-const showDeleteConfirm = (id) => {
-  confirm({
-    title: "Are you absolutely sure?",
-    icon: <></>,
-    content:
-      "This action cannot be undone. This category will permanently delete from our servers.",
-    okText: "Delete",
-    okType: "danger",
-    okButtonProps: {
-      danger: true,
-      type: "primary",
-    },
-    cancelText: "Cancel",
-    onOk() {
-      console.log("Deleted id ", id);
-    },
-    onCancel() {
-      console.log("Cancel");
-    },
-    centered: true,
-  });
-};
-
 export default function Category() {
   const { data, isLoading } = useGetCategoriesQuery();
+  const [deleteCategory, { isLoading: isDeleteLoading }] =
+    useDeleteCategoryMutation();
+  const [
+    changeCategoryStatus,
+    { isLoading: isChangeCategoryPublishStatusLoading },
+  ] = useChangeCategoryStatusMutation();
+
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [id, setId] = useState(null);
 
   const dataSource = transformCategories(data?.data || []);
 
@@ -70,14 +61,44 @@ export default function Category() {
       render: (_text, record) => <code>{record.route}</code>,
     },
     {
+      title: <div className="text-center">Published</div>,
+      key: "is_published",
+      render: (_text, record) => (
+        <div className="flex justify-center">
+          <Switch
+            size="small"
+            checked={record.is_published}
+            onChange={async () => {
+              setId(record.id);
+              try {
+                await changeCategoryStatus(record.id).unwrap();
+                toast.success("Category status changed successfully");
+              } catch (error) {
+                console.log(error);
+                toast.error(
+                  error.message || "Failed to change category status",
+                );
+              } finally {
+                setId(null);
+              }
+            }}
+            loading={isChangeCategoryPublishStatusLoading && id === record.id}
+          />
+        </div>
+      ),
+    },
+    {
       title: "Action",
       key: "action",
       render: (_text, record) => (
         <div className="flex space-x-4">
-          <p className="text-info cursor-pointer hover:underline">Edit</p>
+          <p className="cursor-pointer text-info hover:underline">Edit</p>
           <p
             className="cursor-pointer text-danger hover:underline"
-            onClick={() => showDeleteConfirm(record.id)}
+            onClick={() => {
+              setId(record.id);
+              setOpenDeleteModal(true);
+            }}
           >
             Delete
           </p>
@@ -86,19 +107,21 @@ export default function Category() {
     },
   ];
 
-  const rowSelection = {
-    onSelect: (_key, _record, selectedRows) => {
-      console.log(selectedRows);
-    },
-    onSelectAll: (_, selectedRows) => {
-      console.log(selectedRows);
-    },
+  const handleDelete = async () => {
+    try {
+      await deleteCategory(id).unwrap();
+      setOpenDeleteModal(false);
+      setId(null);
+      toast.success("Category deleted successfully");
+    } catch (error) {
+      toast.error(error.message || "Failed to delete category");
+    }
   };
 
   return (
     <div className="space-y-5">
       <Breadcrumb items={items} />
-      <div className="space-y-3">
+      <div className="space-y-5">
         <TitleWithButton
           title="Category"
           buttonText="Add Category"
@@ -110,13 +133,39 @@ export default function Category() {
           columns={columns}
           loading={isLoading}
           pagination={false}
-          //   rowSelection={{
-          //     ...rowSelection,
-          //   }}
           scroll={{
             x: "max-content",
           }}
         />
+
+        <Modal
+          open={openDeleteModal}
+          title="Are you absolutely sure?"
+          icon={<></>}
+          closable={false}
+          footer={
+            <div className="flex items-center justify-end gap-2">
+              <Button
+                disabled={isDeleteLoading}
+                onClick={() => setOpenDeleteModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="primary"
+                danger
+                loading={isDeleteLoading}
+                onClick={handleDelete}
+              >
+                Delete
+              </Button>
+            </div>
+          }
+          centered
+        >
+          This action cannot be undone. This category will be permanently
+          deleted from our servers.
+        </Modal>
       </div>
     </div>
   );
