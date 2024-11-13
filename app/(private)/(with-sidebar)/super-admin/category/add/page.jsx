@@ -7,6 +7,7 @@ import {
   useCreateCategoryMutation,
   useGetCategoriesQuery,
 } from "@/redux/api/categoryApi";
+import { findObjectById } from "@/utils";
 import { transformCategories } from "@/utils/constant";
 import { Breadcrumb, Button, Cascader } from "antd";
 import Dragger from "antd/es/upload/Dragger";
@@ -58,7 +59,6 @@ export default function AddCategory() {
       try {
         await createCategory(formData);
         formik.resetForm();
-        formik.setFieldValue("parent_category_id", null);
         toast.success("Category created successfully");
       } catch (error) {
         toast.error(error?.message || "Failed to create category");
