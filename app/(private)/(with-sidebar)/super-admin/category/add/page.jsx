@@ -7,7 +7,6 @@ import {
   useCreateCategoryMutation,
   useGetCategoriesQuery,
 } from "@/redux/api/categoryApi";
-import { findObjectById } from "@/utils";
 import { transformCategories } from "@/utils/constant";
 import { Breadcrumb, Button, Cascader } from "antd";
 import Dragger from "antd/es/upload/Dragger";

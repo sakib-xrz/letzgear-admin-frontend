@@ -24,7 +24,10 @@ export default function TitleWithButton({
         {buttonText ? (
           href ? (
             <Link href={href}>
-              <Button type="primary" icon={icon && <PlusIcon />}>
+              <Button
+                type="primary"
+                icon={icon && <PlusIcon size={16} className="text-white" />}
+              >
                 {buttonText}
               </Button>
             </Link>
