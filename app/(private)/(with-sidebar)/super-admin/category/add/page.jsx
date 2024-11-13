@@ -58,7 +58,7 @@ export default function AddCategory() {
       formData.append("image", values.image);
 
       try {
-        await createCategory(formData);
+        await createCategory(formData).unwrap();
         formik.resetForm();
         toast.success("Category created successfully");
         router.push("/super-admin/category");
