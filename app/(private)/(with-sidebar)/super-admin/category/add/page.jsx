@@ -13,6 +13,7 @@ import Dragger from "antd/es/upload/Dragger";
 import { useFormik } from "formik";
 import { ImageUp, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import * as Yup from "yup";
 
@@ -30,6 +31,7 @@ const items = [
 
 export default function AddCategory() {
   const { data, isLoading } = useGetCategoriesQuery();
+  const router = useRouter();
 
   const [createCategory, { isLoading: isCreateCategoryLoading }] =
     useCreateCategoryMutation();
@@ -59,6 +61,7 @@ export default function AddCategory() {
         await createCategory(formData);
         formik.resetForm();
         toast.success("Category created successfully");
+        router.push("/super-admin/category");
       } catch (error) {
         toast.error(error?.message || "Failed to create category");
       }

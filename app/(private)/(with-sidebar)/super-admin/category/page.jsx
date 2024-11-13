@@ -57,7 +57,7 @@ export default function Category() {
               alt={record.name}
               width={100}
               height={100}
-              className="h-10 w-auto object-cover lg:h-8"
+              className="h-10 w-auto rounded object-cover lg:h-8"
             />
             <h3 className="font-medium max-lg:line-clamp-1">{record.name}</h3>
           </div>
@@ -110,9 +110,9 @@ export default function Category() {
           columns={columns}
           loading={isLoading}
           pagination={false}
-          rowSelection={{
-            ...rowSelection,
-          }}
+          //   rowSelection={{
+          //     ...rowSelection,
+          //   }}
           scroll={{
             x: "max-content",
           }}
