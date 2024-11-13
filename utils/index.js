@@ -30,20 +30,31 @@ export function sanitizeParams(params) {
   return sanitizedObj;
 }
 
-export function findObjectById(data, id) {
-  for (const item of data) {
-    // Check if the current item's value matches the id
-    if (item.value === id) {
-      return item;
-    }
-    // If there are children, search recursively within them
-    if (item.children && item.children.length > 0) {
-      const result = findObjectById(item.children, id);
-      if (result) {
-        return result;
-      }
-    }
+export function transformCategories(data) {
+  if (data?.length === 0) {
+    return [];
   }
-  // Return null if no match is found
-  return null;
+
+  return data.map((category) => {
+    // Create a copy of the category object
+    const transformedCategory = { ...category };
+
+    // Add new field 'key' with the same value as 'id'
+    transformedCategory.key = category.id;
+
+    // Rename 'sub_categories' to 'children' if they exist
+    if (
+      Array.isArray(category.sub_categories) &&
+      category.sub_categories.length > 0
+    ) {
+      transformedCategory.children = transformCategories(
+        category.sub_categories,
+      );
+    }
+
+    // Remove the original 'sub_categories' property
+    delete transformedCategory.sub_categories;
+
+    return transformedCategory;
+  });
 }
