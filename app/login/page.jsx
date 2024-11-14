@@ -70,21 +70,19 @@ export default function Login() {
                     formik={formik}
                     required
                   />
-                  <div className="flex justify-end">
-                    <Link href="/forgot-password">
-                      <Button
-                        type="link"
-                        className="!p-0 text-primary hover:underline"
-                      >
-                        Forgot password?
-                      </Button>
-                    </Link>
-                  </div>
                 </div>
               </div>
-              <Button type="primary" htmlType="submit" block loading={loading}>
-                Sign in
-              </Button>
+              <div>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  block
+                  loading={loading}
+                  className="mt-2"
+                >
+                  Sign in
+                </Button>
+              </div>
             </form>
           </Card>
         </div>

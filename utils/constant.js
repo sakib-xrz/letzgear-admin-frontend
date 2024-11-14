@@ -68,7 +68,7 @@ export const getSidebarItems = (role) => {
       getItem("Category List", "/super-admin/category"),
       getItem("Add Category", "/super-admin/category/add"),
     ]),
-    getItem("Product", "/super-admin/product", <Box />),
+    // getItem("Product", "/super-admin/product", <Box />),
   ];
 
   switch (role) {
