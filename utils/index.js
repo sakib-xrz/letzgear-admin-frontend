@@ -7,11 +7,11 @@ export function generateQueryString(params) {
 
   const queryString = Object.entries(params)
     .filter(
-      ([_key, value]) => value !== "" && value !== null && value !== undefined
+      ([_key, value]) => value !== "" && value !== null && value !== undefined,
     )
     .map(
       ([key, value]) =>
-        `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+        `${encodeURIComponent(key)}=${encodeURIComponent(value)}`,
     )
     .join("&");
 
@@ -28,4 +28,33 @@ export function sanitizeParams(params) {
   }
 
   return sanitizedObj;
+}
+
+export function transformCategories(data) {
+  if (data?.length === 0) {
+    return [];
+  }
+
+  return data.map((category) => {
+    // Create a copy of the category object
+    const transformedCategory = { ...category };
+
+    // Add new field 'key' with the same value as 'id'
+    transformedCategory.key = category.id;
+
+    // Rename 'sub_categories' to 'children' if they exist
+    if (
+      Array.isArray(category.sub_categories) &&
+      category.sub_categories.length > 0
+    ) {
+      transformedCategory.children = transformCategories(
+        category.sub_categories,
+      );
+    }
+
+    // Remove the original 'sub_categories' property
+    delete transformedCategory.sub_categories;
+
+    return transformedCategory;
+  });
 }

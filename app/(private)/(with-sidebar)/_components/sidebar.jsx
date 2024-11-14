@@ -46,7 +46,7 @@ export default function Sidebar({ children }) {
           <Layout>
             <Content
               style={{
-                marginInlineStart: collapsed ? 80 : 200,
+                marginInlineStart: collapsed ? 80 : 300,
               }}
             >
               <Container>{children}</Container>

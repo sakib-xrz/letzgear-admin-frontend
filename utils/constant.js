@@ -14,17 +14,17 @@ export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const generateProfileDropdownOptions = (role) => {
   return [
-    {
-      key: `/${role}/dashboard/profile`,
-      label: (
-        <Link
-          href={`/${role}/dashboard/profile`}
-          className="flex items-center gap-2"
-        >
-          <UsersRound className="size-5" /> Profile
-        </Link>
-      ),
-    },
+    // {
+    //   key: `/${role}/dashboard/profile`,
+    //   label: (
+    //     <Link
+    //       href={`/${role}/dashboard/profile`}
+    //       className="flex items-center gap-2"
+    //     >
+    //       <UsersRound className="size-5" /> Profile
+    //     </Link>
+    //   ),
+    // },
     {
       key: "/change-password",
       label: (
@@ -68,7 +68,7 @@ export const getSidebarItems = (role) => {
       getItem("Category List", "/super-admin/category"),
       getItem("Add Category", "/super-admin/category/add"),
     ]),
-    getItem("Product", "/super-admin/product", <Box />),
+    // getItem("Product", "/super-admin/product", <Box />),
   ];
 
   switch (role) {
@@ -80,3 +80,17 @@ export const getSidebarItems = (role) => {
       return [];
   }
 };
+
+export function transformCategories(data) {
+  return data.map((category) => transformCategory(category));
+}
+
+function transformCategory(category) {
+  return {
+    value: category.id,
+    label: category.name,
+    children: (category.sub_categories || []).map((subCategory) =>
+      transformCategory(subCategory),
+    ),
+  };
+}

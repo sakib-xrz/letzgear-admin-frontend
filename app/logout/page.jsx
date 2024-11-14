@@ -4,12 +4,9 @@
 import removeAccessToken from "@/actions/removeAccessToken";
 import { logout, removeUserInfo } from "@/utils/auth";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Logout() {
-  const router = useRouter();
-
   useEffect(() => {
     const logOut = async () => {
       await logout();
