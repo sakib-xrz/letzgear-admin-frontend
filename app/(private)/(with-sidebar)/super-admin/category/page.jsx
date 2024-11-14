@@ -12,6 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
+import EditCategoryModal from "./_components/edit-category-modal";
 
 const items = [
   {
@@ -32,6 +33,8 @@ export default function Category() {
   ] = useChangeCategoryStatusMutation();
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [editableCategory, setEditableCategory] = useState(null);
   const [id, setId] = useState(null);
 
   const dataSource = transformCategories(data?.data || []);
@@ -46,9 +49,11 @@ export default function Category() {
             <Image
               src={record.image}
               alt={record.name}
-              width={100}
-              height={100}
+              width={120}
+              height={72}
               className="h-10 w-auto rounded object-cover lg:h-8"
+              placeholder="blur"
+              blurDataURL={record.image}
             />
             <h3 className="font-medium max-lg:line-clamp-1">{record.name}</h3>
           </div>
@@ -92,7 +97,15 @@ export default function Category() {
       key: "action",
       render: (_text, record) => (
         <div className="flex space-x-4">
-          <p className="cursor-pointer text-info hover:underline">Edit</p>
+          <p
+            className="cursor-pointer text-info hover:underline"
+            onClick={() => {
+              setEditableCategory(record);
+              setOpenEditModal(true);
+            }}
+          >
+            Edit
+          </p>
           <p
             className="cursor-pointer text-danger hover:underline"
             onClick={() => {
@@ -106,6 +119,8 @@ export default function Category() {
       ),
     },
   ];
+
+  const handleEdit = async () => {};
 
   const handleDelete = async () => {
     try {
@@ -147,7 +162,10 @@ export default function Category() {
             <div className="flex items-center justify-end gap-2">
               <Button
                 disabled={isDeleteLoading}
-                onClick={() => setOpenDeleteModal(false)}
+                onClick={() => {
+                  setOpenDeleteModal(false);
+                  setId(null);
+                }}
               >
                 Cancel
               </Button>
@@ -162,10 +180,20 @@ export default function Category() {
             </div>
           }
           centered
+          destroyOnClose
         >
           This action cannot be undone. This category will be permanently
           deleted from our servers.
         </Modal>
+
+        {editableCategory && (
+          <EditCategoryModal
+            open={openEditModal}
+            setOpen={setOpenEditModal}
+            data={editableCategory}
+            setData={setEditableCategory}
+          />
+        )}
       </div>
     </div>
   );
