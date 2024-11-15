@@ -21,8 +21,19 @@ export const profileApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [tagTypes.profile],
     }),
+    updateProfile: build.mutation({
+      query: (data) => ({
+        url: "/profile",
+        method: "PATCH",
+        data,
+      }),
+      invalidatesTags: [tagTypes.profile],
+    }),
   }),
 });
 
-export const { useGetProfileQuery, useUpdateProfilePictureMutation } =
-  profileApi;
+export const {
+  useGetProfileQuery,
+  useUpdateProfilePictureMutation,
+  useUpdateProfileMutation,
+} = profileApi;

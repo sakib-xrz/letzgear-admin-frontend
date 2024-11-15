@@ -4,9 +4,10 @@ import FormInput from "@/components/form/form-input";
 import Title from "@/components/shared/title";
 import {
   useGetProfileQuery,
+  useUpdateProfileMutation,
   useUpdateProfilePictureMutation,
 } from "@/redux/api/profileApi";
-import { Upload } from "antd";
+import { Button, Upload } from "antd";
 import { useFormik } from "formik";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
@@ -17,12 +18,16 @@ export default function Profile() {
   const { data, isLoading } = useGetProfileQuery();
   const [updateProfilePicture, { isLoading: isUpdateProfilePictureLoading }] =
     useUpdateProfilePictureMutation();
+
+  const [updateProfile, { isLoading: isUpdateProfileLoading }] =
+    useUpdateProfileMutation();
+
   const user = data?.data;
 
-  const [isUploading, setIsUploading] = useState(false); // Track upload state
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleChange = async (info) => {
-    if (isUploading) return; // Prevent multiple uploads
+    if (isUploading) return;
     setIsUploading(true);
 
     try {
@@ -36,7 +41,7 @@ export default function Profile() {
     } catch (error) {
       toast.error("Failed to update profile picture");
     } finally {
-      setIsUploading(false); // Reset the flag after upload
+      setIsUploading(false);
     }
   };
 
@@ -46,6 +51,20 @@ export default function Profile() {
       name: "",
       phone: "",
     },
+    onSubmit: async (values) => {
+      const payload = {
+        name: values.name,
+        phone: values.phone.startsWith("+88")
+          ? values.phone
+          : `+88${values.phone}`,
+      };
+      try {
+        await updateProfile(payload).unwrap();
+        toast.success("Profile updated successfully");
+      } catch (error) {
+        toast.error(error.message || "Failed to update profile");
+      }
+    },
   });
 
   useEffect(() => {
@@ -54,6 +73,7 @@ export default function Profile() {
       formik.setFieldValue("name", user.name);
       formik.setFieldValue("phone", user.phone);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   if (isLoading) {
@@ -119,6 +139,16 @@ export default function Profile() {
               required
             />
           </div>
+
+          <Button
+            disabled={isUpdateProfileLoading || isUpdateProfilePictureLoading}
+            loading={isUpdateProfileLoading}
+            className="w-full"
+            type="primary"
+            htmlType="submit"
+          >
+            Update Profile
+          </Button>
         </form>
       </div>
     </div>
