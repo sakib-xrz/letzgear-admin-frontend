@@ -4,7 +4,7 @@ import { AUTH_TOKEN_KEY } from "./utils/constant";
 import { cookies } from "next/headers";
 
 const AuthRoutes = ["/login"];
-const commonPrivateRoutes = ["/change-password"];
+const commonPrivateRoutes = ["/change-password", "/profile"];
 
 const roleBasedPrivateRoutes = {
   SUPER_ADMIN: [/^\/super-admin/], // means any route starting with /super-admin

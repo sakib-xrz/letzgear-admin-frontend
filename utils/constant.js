@@ -14,17 +14,14 @@ export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const generateProfileDropdownOptions = (role) => {
   return [
-    // {
-    //   key: `/${role}/dashboard/profile`,
-    //   label: (
-    //     <Link
-    //       href={`/${role}/dashboard/profile`}
-    //       className="flex items-center gap-2"
-    //     >
-    //       <UsersRound className="size-5" /> Profile
-    //     </Link>
-    //   ),
-    // },
+    {
+      key: `/profile`,
+      label: (
+        <Link href={`/profile`} className="flex items-center gap-2">
+          <UsersRound className="size-5" /> Profile
+        </Link>
+      ),
+    },
     {
       key: "/change-password",
       label: (
