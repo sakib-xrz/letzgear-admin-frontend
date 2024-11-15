@@ -3,12 +3,16 @@
 import FormInput from "@/components/form/form-input";
 import TitleWithButton from "@/components/shared/title-with-button";
 import { useCreateSizeMutation, useGetSizesQuery } from "@/redux/api/sizeApi";
-import { Breadcrumb, Button, Modal } from "antd";
+import { Breadcrumb, Button, Modal, Table } from "antd";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import * as Yup from "yup";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+
+dayjs.extend(localizedFormat);
 
 const items = [
   {
@@ -28,6 +32,38 @@ export default function Size() {
     useCreateSizeMutation();
 
   const { data, isLoading: isSizesLoading } = useGetSizesQuery();
+
+  const dataSource = data?.data || [];
+
+  const columns = [
+    {
+      title: "Size",
+      key: "name",
+      dataIndex: "name",
+      render: (_text, record) => <h3 className="font-medium">{record.name}</h3>,
+    },
+    {
+      title: "Created At",
+      key: "createdAt",
+      dataIndex: "createdAt",
+      render: (_text, record) => <p>{dayjs(record.createdAt).format("lll")}</p>,
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_text, record) => (
+        <p
+          className="cursor-pointer text-danger hover:underline"
+          onClick={() => {
+            setId(record.id);
+            setOpenDeleteModal(true);
+          }}
+        >
+          Delete
+        </p>
+      ),
+    },
+  ];
 
   const formik = useFormik({
     initialValues: {
@@ -61,6 +97,18 @@ export default function Size() {
           title="Size"
           buttonText="Add Size"
           onClick={() => setAddSizeModal(true)}
+        />
+
+        <Table
+          bordered
+          dataSource={dataSource}
+          columns={columns}
+          loading={isSizesLoading}
+          pagination={false}
+          //   ellipsis={true}
+          scroll={{
+            x: "max-content",
+          }}
         />
       </div>
 
