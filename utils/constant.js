@@ -2,7 +2,7 @@ import {
   LayoutDashboard,
   KeyRound,
   LogOut,
-  UsersRound,
+  UserRound,
   LayoutList,
   Box,
 } from "lucide-react";
@@ -18,7 +18,7 @@ export const generateProfileDropdownOptions = (role) => {
       key: `/profile`,
       label: (
         <Link href={`/profile`} className="flex items-center gap-2">
-          <UsersRound className="size-5" /> Profile
+          <UserRound className="size-5" /> Profile
         </Link>
       ),
     },
