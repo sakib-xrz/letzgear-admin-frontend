@@ -107,14 +107,14 @@ export default function AddCategory() {
               <FormInput
                 label="Name"
                 name="name"
-                placeholder="Enter category name"
+                placeholder="Ex. T-Shirt"
                 formik={formik}
                 required
               />
               <FormInput
                 label="Category URL"
                 name="route"
-                placeholder="Enter category url"
+                placeholder="Ex. /t-shirt"
                 formik={formik}
                 required
               />
