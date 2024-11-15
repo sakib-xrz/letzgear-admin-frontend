@@ -3,6 +3,7 @@ export const tagTypes = {
   user: "user",
   profile: "profile",
   category: "category",
+  size: "size",
 };
 
 export const tagTypesList = [
@@ -10,4 +11,5 @@ export const tagTypesList = [
   tagTypes.user,
   tagTypes.profile,
   tagTypes.category,
+  tagTypes.size,
 ];

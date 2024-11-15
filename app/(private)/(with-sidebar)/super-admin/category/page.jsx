@@ -120,8 +120,6 @@ export default function Category() {
     },
   ];
 
-  const handleEdit = async () => {};
-
   const handleDelete = async () => {
     try {
       await deleteCategory(id).unwrap();
