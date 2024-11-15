@@ -2,7 +2,11 @@
 
 import FormInput from "@/components/form/form-input";
 import TitleWithButton from "@/components/shared/title-with-button";
-import { useCreateSizeMutation, useGetSizesQuery } from "@/redux/api/sizeApi";
+import {
+  useCreateSizeMutation,
+  useDeleteSizeMutation,
+  useGetSizesQuery,
+} from "@/redux/api/sizeApi";
 import { Breadcrumb, Button, Modal, Table } from "antd";
 import { useFormik } from "formik";
 import Link from "next/link";
@@ -27,9 +31,12 @@ const items = [
 ];
 
 export default function Size() {
+  const [id, setId] = useState(null);
   const [addSizeModal, setAddSizeModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [createSize, { isLoading: isCreateSizeLoading }] =
     useCreateSizeMutation();
+  const [deleteSize, { isLoading: isDeleteLoading }] = useDeleteSizeMutation();
 
   const { data, isLoading: isSizesLoading } = useGetSizesQuery();
 
@@ -87,6 +94,17 @@ export default function Size() {
       }
     },
   });
+
+  const handleDelete = async () => {
+    try {
+      await deleteSize(id).unwrap();
+      setOpenDeleteModal(false);
+      setId(null);
+      toast.success("Size deleted successfully");
+    } catch (error) {
+      toast.error(error.message || "Failed to delete size");
+    }
+  };
 
   return (
     <div className="space-y-5">
@@ -150,6 +168,39 @@ export default function Size() {
           />
         </Modal>
       </form>
+
+      <Modal
+        open={openDeleteModal}
+        title="Are you absolutely sure?"
+        icon={<></>}
+        closable={false}
+        footer={
+          <div className="flex items-center justify-end gap-2">
+            <Button
+              disabled={isDeleteLoading}
+              onClick={() => {
+                setOpenDeleteModal(false);
+                setId(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="primary"
+              danger
+              loading={isDeleteLoading}
+              onClick={handleDelete}
+            >
+              Delete
+            </Button>
+          </div>
+        }
+        centered
+        destroyOnClose
+      >
+        This action cannot be undone. This size will be permanently deleted from
+        our servers.
+      </Modal>
     </div>
   );
 }
