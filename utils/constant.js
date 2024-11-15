@@ -61,11 +61,15 @@ function getItem(label, key, icon, children) {
 export const getSidebarItems = (role) => {
   const SUPER_ADMIN = [
     getItem("Dashboard", "/super-admin/dashboard", <LayoutDashboard />),
-    getItem("Category", "", <LayoutList />, [
+    getItem("Manage Category", "", <LayoutList />, [
       getItem("Category List", "/super-admin/category"),
       getItem("Add Category", "/super-admin/category/add"),
     ]),
-    // getItem("Product", "/super-admin/product", <Box />),
+    getItem("Manage Product", "/super-admin/product", <Box />, [
+      getItem("Product Size", "/super-admin/product/size"),
+      // getItem("Product List", "/super-admin/product"),
+      // getItem("Add Product", "/super-admin/product/add"),
+    ]),
   ];
 
   switch (role) {
