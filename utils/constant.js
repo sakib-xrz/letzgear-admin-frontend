@@ -95,3 +95,16 @@ function transformCategory(category) {
     ),
   };
 }
+
+export const discountOptions = [
+  {
+    key: "1",
+    value: "PERCENT",
+    label: "Percentage",
+  },
+  {
+    key: "2",
+    value: "FLAT",
+    label: "Flat",
+  },
+];

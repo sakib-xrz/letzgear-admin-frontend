@@ -6,9 +6,13 @@ import "react-quill/dist/quill.snow.css";
 import FormInput from "@/components/form/form-input";
 import Label from "@/components/shared/label";
 import Title from "@/components/shared/title";
-import { Breadcrumb, Button, Input, Tabs } from "antd";
+import { Breadcrumb, Button, Cascader, Input, Select, Tabs } from "antd";
 import { useFormik } from "formik";
 import Link from "next/link";
+import { useGetCategoriesQuery } from "@/redux/api/categoryApi";
+import { discountOptions, transformCategories } from "@/utils/constant";
+import FormikErrorBox from "@/components/shared/formik-error-box";
+import { Loader2 } from "lucide-react";
 
 const items = [
   {
@@ -23,8 +27,11 @@ const items = [
 ];
 
 export default function CreateProduct() {
+  const { data, isLoading } = useGetCategoriesQuery();
+
   const formik = useFormik({
     initialValues: {
+      category_id: null,
       name: "",
       short_description: "",
       full_description: "",
@@ -33,8 +40,13 @@ export default function CreateProduct() {
       buy_price: 0,
       cost_price: 0,
       sell_price: 0,
+      discount_type: null,
+      discount: 0,
+      total_stock: 0,
     },
     onSubmit: async (values) => {
+      console.log(values);
+
       try {
         // Do something
       } catch (error) {
@@ -43,16 +55,42 @@ export default function CreateProduct() {
     },
   });
 
-  console.log(formik.values.delivery_policy);
+  if (isLoading) {
+    return (
+      <div className="flex h-[calc(100svh-130px)] items-center justify-center">
+        <Loader2 size={32} className="animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  const categoryOptions = transformCategories(data?.data);
 
   return (
     <div className="space-y-5">
       <Breadcrumb items={items} />
 
-      <div className="space-y-3 sm:rounded-md sm:bg-white sm:p-6 sm:shadow lg:mx-auto lg:w-8/12 lg:p-8">
+      <div className="space-y-3 sm:rounded-md sm:bg-white sm:p-6 sm:shadow lg:p-8">
         <Title title={"Create New Product"} />
 
-        <form onSubmit={formik.handleSubmit} className="space-y-5">
+        <form onSubmit={formik.handleSubmit} className="space-y-2">
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="category_id" className={"py-1"} required>
+              Category
+            </Label>
+            <Cascader
+              options={categoryOptions}
+              onChange={(value) => {
+                formik.setFieldValue(
+                  "category_id",
+                  value?.length ? value[value?.length - 1] : null,
+                );
+              }}
+              changeOnSelect
+              className="!w-full"
+            />
+            <FormikErrorBox formik={formik} name="category_id" />
+          </div>
+
           <FormInput
             label="Title"
             name="name"
@@ -71,8 +109,9 @@ export default function CreateProduct() {
               showCount
               maxLength={255}
               style={{
-                height: 120,
+                height: 150,
                 resize: "none",
+                paddingBottom: 20,
               }}
             />
           </div>
@@ -99,12 +138,9 @@ export default function CreateProduct() {
                           { indent: "-1" },
                           { indent: "+1" },
                         ],
-                        ["link", "image", "video"],
+                        ["link", "image"],
                         ["clean"],
                       ],
-                      clipboard: {
-                        matchVisual: false,
-                      },
                     }}
                     theme="snow"
                     value={formik.values.full_description}
@@ -131,12 +167,9 @@ export default function CreateProduct() {
                           { indent: "-1" },
                           { indent: "+1" },
                         ],
-                        ["link", "image", "video"],
+                        ["link", "image"],
                         ["clean"],
                       ],
-                      clipboard: {
-                        matchVisual: false,
-                      },
                     }}
                     theme="snow"
                     value={formik.values.delivery_policy}
@@ -149,7 +182,7 @@ export default function CreateProduct() {
             ]}
           />
 
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             <FormInput
               label="Buy Price"
               name="buy_price"
@@ -170,18 +203,54 @@ export default function CreateProduct() {
             />
           </div>
 
-          <FormInput
-            label="Youtube Video Link"
-            name="youtube_video_link"
-            placeholder="Enter youtube video link"
-            formik={formik}
-          />
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <div className="flex flex-col gap-1">
+              <Label htmlFor="category_id" className={"py-1"}>
+                Discount Type
+              </Label>
+              <Select
+                className="!mt-0.5 !w-full"
+                name="discount_type"
+                options={discountOptions}
+                placeholder="Select Discount Type"
+                onChange={(value) => {
+                  {
+                    console.log(value);
 
-          <div className="flex items-center gap-4">
-            <Button className="w-full">Cancel</Button>
-            <Button type="primary" htmlType="submit" className="w-full">
-              Create Product
-            </Button>
+                    formik.setFieldValue("discount_type", value);
+                    formik.setFieldValue("discount", 0);
+                  }
+                }}
+              />
+              <FormikErrorBox formik={formik} name="category_id" />
+            </div>
+
+            <FormInput label="Discount" name="discount" formik={formik} />
+
+            <FormInput
+              label="Youtube Video Link"
+              name="youtube_video_link"
+              placeholder="Enter youtube video link"
+              formik={formik}
+            />
+
+            <FormInput
+              label="Total Stock"
+              name="total_stock"
+              formik={formik}
+              required
+            />
+          </div>
+
+          <div>
+            <div className="mt-5 flex items-center gap-2">
+              <Button className="w-full">
+                <Link href="/super-admin/product">Cancel</Link>
+              </Button>
+              <Button type="primary" htmlType="submit" className="w-full">
+                Create Product
+              </Button>
+            </div>
           </div>
         </form>
       </div>

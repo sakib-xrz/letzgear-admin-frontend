@@ -108,6 +108,18 @@
   color: rgba(0, 0, 0, 0.3) !important;
 }
 
+.ant-input-data-count {
+  bottom: 0px !important;
+  right: 10px !important;
+}
+
+:where(.css-dev-only-do-not-override-dxd93w).ant-select-dropdown
+  .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  color: #ffffff !important;
+  font-weight: 600;
+  background-color: #56575c;
+}
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
