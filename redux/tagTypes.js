@@ -4,6 +4,9 @@ export const tagTypes = {
   profile: "profile",
   category: "category",
   size: "size",
+  product: "product",
+  productImage: "productImage",
+  productVariant: "productVariant",
 };
 
 export const tagTypesList = [
@@ -12,4 +15,5 @@ export const tagTypesList = [
   tagTypes.profile,
   tagTypes.category,
   tagTypes.size,
+  tagTypes.product,
 ];

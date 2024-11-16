@@ -13,6 +13,9 @@ import { useGetCategoriesQuery } from "@/redux/api/categoryApi";
 import { discountOptions, transformCategories } from "@/utils/constant";
 import FormikErrorBox from "@/components/shared/formik-error-box";
 import { Loader2 } from "lucide-react";
+import { useCreateProductMutation } from "@/redux/api/productApi";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const items = [
   {
@@ -27,7 +30,11 @@ const items = [
 ];
 
 export default function CreateProduct() {
+  const router = useRouter();
   const { data, isLoading } = useGetCategoriesQuery();
+
+  const [createProduct, { isLoading: isCreateProductLoading }] =
+    useCreateProductMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -45,12 +52,22 @@ export default function CreateProduct() {
       total_stock: 0,
     },
     onSubmit: async (values) => {
-      console.log(values);
-
+      const payload = {
+        ...values,
+        buy_price: parseFloat(values.buy_price),
+        cost_price: parseFloat(values.cost_price),
+        sell_price: parseFloat(values.sell_price),
+        discount: parseFloat(values.discount),
+        total_stock: parseInt(values.total_stock),
+      };
       try {
-        // Do something
+        await createProduct(payload).unwrap();
+        toast.success("Product created successfully");
+        formik.resetForm();
+        router.push("/super-admin/product");
       } catch (error) {
-        // Do something
+        console.log(error);
+        toast.error(error.message || "Failed to create product");
       }
     },
   });
@@ -244,10 +261,15 @@ export default function CreateProduct() {
 
           <div>
             <div className="mt-5 flex items-center gap-2">
-              <Button className="w-full">
+              <Button className="w-full" disabled={isCreateProductLoading}>
                 <Link href="/super-admin/product">Cancel</Link>
               </Button>
-              <Button type="primary" htmlType="submit" className="w-full">
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="w-full"
+                loading={isCreateProductLoading}
+              >
                 Create Product
               </Button>
             </div>
