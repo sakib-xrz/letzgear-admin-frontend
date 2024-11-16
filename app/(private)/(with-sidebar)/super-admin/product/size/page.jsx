@@ -53,7 +53,9 @@ export default function Size() {
       title: "Created At",
       key: "createdAt",
       dataIndex: "createdAt",
-      render: (_text, record) => <p>{dayjs(record.createdAt).format("lll")}</p>,
+      render: (_text, record) => (
+        <p>{dayjs(record.created_at).format("lll")}</p>
+      ),
     },
     {
       title: "Action",
