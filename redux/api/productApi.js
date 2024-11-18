@@ -4,9 +4,10 @@ import { baseApi } from "./baseApi";
 export const productApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getProductList: build.query({
-      query: () => ({
-        url: "/products",
+      query: (query) => ({
+        url: "/products/admin",
         method: "GET",
+        params: query,
       }),
       providesTags: [tagTypes.product],
     }),
