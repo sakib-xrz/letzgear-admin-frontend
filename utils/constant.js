@@ -99,7 +99,7 @@ function transformCategory(category) {
 export const discountOptions = [
   {
     key: "1",
-    value: "PERCENT",
+    value: "PERCENTAGE",
     label: "Percentage",
   },
   {
