@@ -1,6 +1,7 @@
 "use client";
 
 import Container from "@/components/shared/container";
+import useDesktop from "@/hooks/use-desktop";
 import { getUserInfo } from "@/utils/auth";
 import { getSidebarItems } from "@/utils/constant";
 import { Layout, Menu } from "antd";
@@ -10,9 +11,12 @@ import { useState } from "react";
 const { Content, Sider } = Layout;
 
 export default function Sidebar({ children }) {
+  const isDesktop = useDesktop();
+  console.log(isDesktop);
+
   const router = useRouter();
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(isDesktop ? false : true);
   const user = getUserInfo();
 
   const items = getSidebarItems(user?.role);

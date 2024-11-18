@@ -40,6 +40,7 @@ export default function CreateProduct() {
     initialValues: {
       category_id: null,
       name: "",
+      sku: "",
       short_description: "",
       full_description: "",
       delivery_policy: `<p>ঢাকা সিটি -হোম ডেলিভারী -৭০ টাকা ঢাকা </p><p>সিটি’র ভেতরে অর্থাৎ ঢাকা সিটি কর্পোরেশনের মধ্যে যে এলাকাগুলো রয়েছে সেই এলাকাগুলোতে সম্পূর্ণ ক্যাশ অন ডেলিভারি-তে ড্রেস ডেলিভারি করা হয়। </p><p>অর্থাৎ একজন ক্রেতা কোন প্রোডাক্ট অর্ডার করার পর প্রোডাক্টটি হাতে পেয়ে ডেলিভারিম্যানের কাছে প্রোডাক্টের মূল্য পরিশোধ করতে পারবেন। </p><p>ঢাকার বাইরে -সারা বাংলাদেশ- হোম ডেলিভারি অথবা কুরিয়ার ডেলিভেরী -১৫০ টাকা </p><p><span style="background-color: rgb(255 255 255 / var(--tw-bg-opacity));">ঢাকার বাইরের অর্ডারের ক্ষেত্রে যে এলাকাসমূহতে কন্ডিশনে কুরিয়ার যায় সেই ক্ষেত্রে শুধুমাত্র ডেলিভারি চার্জ এডভান্স করে অর্ডার করতে হয়। </span></p><p>পরবর্তীতে কুরিয়ার থেকে প্রোডাক্ট সংগ্রহের সময় শুধুমাত্র প্রোডাক্টের মূল্য পরিশোধ করে ক্রেতা তার প্রোডাক্টটি সংগ্রহ করতে পারবেন। </p><p>ঢাকার বাইরে হোম ডেলিভারির সুযোগ সাধারণত থানা সদরগুলোতে পাওয়া যায়। কুরিয়ারের ডেলিভারির সময় থেকে , হোম ডেলিভারিতে একটু বেশী সময় প্রয়োজন হয়, ৩-৫ দিন ঢাকার বাইরে হোম ডেলিভারির ক্ষেত্রে শুধুমাত্র ডেলিভারি চার্জ টা এডভান্স পেমেন্ট করতে হয় বাকী টাকা ক্যাশ অন ডেলিভারিতে অর্থাৎ প্রোডাক্ট রিসিভ করার সময় ডেলিভারিম্যানের কাছে টাকা দিয়ে প্রোডাক্ট রিসিভ করতে পারবেন।</p>`,
@@ -108,13 +109,23 @@ export default function CreateProduct() {
             <FormikErrorBox formik={formik} name="category_id" />
           </div>
 
-          <FormInput
-            label="Title"
-            name="name"
-            placeholder="Enter product title"
-            formik={formik}
-            required
-          />
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <FormInput
+              label="Title"
+              name="name"
+              placeholder="Enter product title"
+              formik={formik}
+              required
+            />
+            <FormInput
+              label="Product SKU"
+              name="sku"
+              placeholder="Enter product sku (it should be unique for each product)"
+              formik={formik}
+              required
+            />
+          </div>
+
           <div className="space-y-1">
             <Label htmlFor="short_description" className={"py-1"}>
               Short Description

@@ -79,7 +79,6 @@ export default function Product() {
           href="/super-admin/product/add"
         />
       </div>
-
       <ProductSearchFilter
         params={params}
         setParams={setParams}
