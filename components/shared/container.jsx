@@ -7,7 +7,7 @@ export default function Container({ children, className }) {
     "px-4",
     "py-5",
     "lg:py-8",
-    className
+    className,
   );
 
   return <div className={containerClasses}>{children}</div>;

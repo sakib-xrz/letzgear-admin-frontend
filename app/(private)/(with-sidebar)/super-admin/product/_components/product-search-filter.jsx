@@ -26,7 +26,7 @@ export default function ProductSearchFilter({
             allowClear
           />
         </div>
-        <div className="lg:hidden">
+        <div>
           <Button
             onClick={() => setIsFilterVisible(!isFilterVisible)}
             icon={
@@ -39,57 +39,59 @@ export default function ProductSearchFilter({
           />
 
           {isFilterVisible && (
-            <div className="absolute left-0 top-20 w-full space-y-3 rounded bg-white py-4 md:px-4">
-              <div className="flex w-full flex-col gap-2">
-                <Label htmlFor="discount_type">Discount Type</Label>
-                <Select
-                  name="discount_type"
-                  value={params.discount_type}
-                  onChange={(value) =>
-                    setParams({ ...params, discount_type: value })
-                  }
-                  options={discountOptions}
-                  placeholder="Filter by discount type"
-                  allowClear
-                />
-              </div>
-              <div className="flex w-full flex-col gap-2">
-                <Label htmlFor="is_published">Published Status</Label>
-                <Select
-                  name="is_published"
-                  value={params.is_published}
-                  onChange={(value) =>
-                    setParams({ ...params, is_published: value })
-                  }
-                  options={[
-                    { label: "Published", value: "true" },
-                    { label: "Unpublished", value: "false" },
-                  ]}
-                  placeholder="Filter by published status"
-                  allowClear
-                />
-              </div>
-              <div className="flex w-full flex-col gap-2">
-                <Label htmlFor="is_featured">Featured Status</Label>
-                <Select
-                  name="is_featured"
-                  value={params.is_featured}
-                  onChange={(value) =>
-                    setParams({ ...params, is_featured: value })
-                  }
-                  options={[
-                    { label: "Featured", value: "true" },
-                    { label: "Not Featured", value: "false" },
-                  ]}
-                  placeholder="Filter by featured status"
-                  allowClear
-                />
+            <div className="absolute left-0 top-20 z-10 w-full space-y-3 rounded border bg-white p-4 shadow">
+              <div className="flex items-center gap-4 max-lg:flex-col">
+                <div className="flex w-full flex-col gap-2">
+                  <Label htmlFor="discount_type">Discount Type</Label>
+                  <Select
+                    name="discount_type"
+                    value={params.discount_type}
+                    onChange={(value) =>
+                      setParams({ ...params, discount_type: value })
+                    }
+                    options={discountOptions}
+                    placeholder="Filter by discount type"
+                    allowClear
+                  />
+                </div>
+                <div className="flex w-full flex-col gap-2">
+                  <Label htmlFor="is_published">Published Status</Label>
+                  <Select
+                    name="is_published"
+                    value={params.is_published}
+                    onChange={(value) =>
+                      setParams({ ...params, is_published: value })
+                    }
+                    options={[
+                      { label: "Published", value: "true" },
+                      { label: "Unpublished", value: "false" },
+                    ]}
+                    placeholder="Filter by published status"
+                    allowClear
+                  />
+                </div>
+                <div className="flex w-full flex-col gap-2">
+                  <Label htmlFor="is_featured">Featured Status</Label>
+                  <Select
+                    name="is_featured"
+                    value={params.is_featured}
+                    onChange={(value) =>
+                      setParams({ ...params, is_featured: value })
+                    }
+                    options={[
+                      { label: "Featured", value: "true" },
+                      { label: "Not Featured", value: "false" },
+                    ]}
+                    placeholder="Filter by featured status"
+                    allowClear
+                  />
+                </div>
               </div>
             </div>
           )}
         </div>
       </div>
-      <div className="hidden w-full items-center gap-2 lg:flex">
+      {/* <div className="hidden w-full items-center gap-2 lg:flex">
         <div className="flex w-full flex-col gap-2">
           <Label htmlFor="discount_type">Discount Type</Label>
           <Select
@@ -129,7 +131,7 @@ export default function ProductSearchFilter({
             allowClear
           />
         </div>
-      </div>
+      </div> */}
       <p className="text-sm text-gray-500">
         Showing{" "}
         {data?.data?.length > 0

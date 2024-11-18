@@ -12,12 +12,12 @@ const { Content, Sider } = Layout;
 
 export default function Sidebar({ children }) {
   const isDesktop = useDesktop();
-  console.log(isDesktop);
-
   const router = useRouter();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(isDesktop ? false : true);
   const user = getUserInfo();
+
+  console.log(pathname);
 
   const items = getSidebarItems(user?.role);
 
@@ -53,7 +53,11 @@ export default function Sidebar({ children }) {
                 marginInlineStart: collapsed ? 80 : 300,
               }}
             >
-              <Container>{children}</Container>
+              <Container
+                className={pathname === "/super-admin/product" && "max-w-full"}
+              >
+                {children}
+              </Container>
             </Content>
           </Layout>
         </Layout>
