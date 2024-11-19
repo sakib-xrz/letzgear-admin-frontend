@@ -185,7 +185,7 @@ export default function Product() {
       ),
       key: "price",
       render: (_text, record) => (
-        <p className="text-center">
+        <p className="text-center font-medium">
           {record.buy_price}, {record.cost_price},{" "}
           <span className="line-through">
             {record.discount !== 0 ? record.sell_price : null}
@@ -237,7 +237,7 @@ export default function Product() {
       key: "action",
       render: () => (
         <>
-          <Dropdown menu={{ items }} trigger={["click", "hover"]}>
+          <Dropdown menu={{ items }} trigger={["click"]}>
             <p className="flex cursor-pointer items-center justify-center gap-1 text-[#007bff]">
               Actions
               <ChevronDown size={16} />
