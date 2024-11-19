@@ -12,6 +12,7 @@ import ProductSearchFilter from "./_components/product-search-filter";
 import { Image } from "antd";
 import { ChevronDown, PencilLine, Ruler, Trash2 } from "lucide-react";
 import { Image as ImageIcon } from "lucide-react";
+import ManageImageModal from "./_components/manage-image-modal";
 
 const breadcrumbItems = [
   {
@@ -44,7 +45,7 @@ export default function Product() {
   const searchParams = useSearchParams();
 
   const [currentProduct, setCurrentProduct] = useState(null);
-  console.log(currentProduct);
+  const [openManageImagesModal, setOpenManageImagesModal] = useState(false);
 
   const [searchKey, setSearchKey] = useState(searchParams.get("search") || "");
 
@@ -93,7 +94,12 @@ export default function Product() {
     {
       key: "1",
       label: (
-        <p className="flex items-center gap-2 text-sm">
+        <p
+          onClick={() => {
+            setOpenManageImagesModal(true);
+          }}
+          className="flex items-center gap-2 text-sm"
+        >
           <ImageIcon size={16} className="text-primary" /> Manage Images
         </p>
       ),
@@ -298,6 +304,14 @@ export default function Product() {
             setParams((prev) => ({ ...prev, limit: size, page: current }))
           }
           responsive={true}
+        />
+      )}
+
+      {openManageImagesModal && (
+        <ManageImageModal
+          openManageImagesModal={openManageImagesModal}
+          setOpenManageImagesModal={setOpenManageImagesModal}
+          currentProduct={currentProduct}
         />
       )}
     </div>
