@@ -43,6 +43,9 @@ export default function Product() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const [currentProduct, setCurrentProduct] = useState(null);
+  console.log(currentProduct);
+
   const [searchKey, setSearchKey] = useState(searchParams.get("search") || "");
 
   const [params, setParams] = useState({
@@ -235,15 +238,19 @@ export default function Product() {
     {
       title: <div className="text-center">Action</div>,
       key: "action",
-      render: () => (
-        <>
+      render: (_text, record) => (
+        <div
+          onClick={() => {
+            setCurrentProduct(record);
+          }}
+        >
           <Dropdown menu={{ items }} trigger={["click"]}>
             <p className="flex cursor-pointer items-center justify-center gap-1 text-[#007bff]">
               Actions
               <ChevronDown size={16} />
             </p>
           </Dropdown>
-        </>
+        </div>
       ),
     },
   ];
