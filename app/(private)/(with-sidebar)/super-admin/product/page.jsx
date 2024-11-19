@@ -22,6 +22,23 @@ const breadcrumbItems = [
   },
 ];
 
+// rowSelection objects indicates the need for row selection
+const rowSelection = {
+  onChange: (selectedRowKeys, selectedRows) => {
+    console.log(
+      `selectedRowKeys: ${selectedRowKeys}`,
+      "selectedRows: ",
+      selectedRows,
+    );
+  },
+  onSelect: (record, selected, selectedRows) => {
+    console.log(record, selected, selectedRows);
+  },
+  onSelectAll: (selected, selectedRows, changeRows) => {
+    console.log(selected, selectedRows, changeRows);
+  },
+};
+
 export default function Product() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -72,38 +89,30 @@ export default function Product() {
   const items = [
     {
       key: "1",
-      label: dataSource.images ? (
-        <Link href={""} className="flex items-center gap-2 text-sm">
-          <ImageIcon size={16} className="text-primary" /> Edit Product Image
-        </Link>
-      ) : (
-        <Link href={""} className="flex items-center gap-2 text-sm">
-          <ImageIcon size={16} className="text-primary" /> Add Product Image
-        </Link>
+      label: (
+        <p className="flex items-center gap-2 text-sm">
+          <ImageIcon size={16} className="text-primary" /> Manage Images
+        </p>
       ),
     },
     {
       key: "2",
-      label: dataSource.size_variants ? (
+      label: (
         <Link href={""} className="flex items-center gap-2 text-sm">
-          <Ruler size={16} className="text-primary" /> Edit Size variant
+          <Ruler size={16} className="text-primary" /> Manage Variants
         </Link>
-      ) : (
+      ),
+    },
+    {
+      key: "3",
+      label: (
         <Link href={""} className="flex items-center gap-2 text-sm">
-          <Ruler size={16} className="text-primary" /> Add Size variant
+          <PencilLine size={16} className="text-primary" /> Update Product
         </Link>
       ),
     },
     {
       key: "4",
-      label: (
-        <Link href={""} className="flex items-center gap-2 text-sm">
-          <PencilLine size={16} className="text-primary" /> Edit Product
-        </Link>
-      ),
-    },
-    {
-      key: "5",
       label: (
         <Link href={""} className="flex items-center gap-2 text-sm">
           <Trash2 size={16} /> Delete Product
@@ -116,6 +125,7 @@ export default function Product() {
   const columns = [
     {
       title: <div className="text-center">Image</div>,
+      dataIndex: "id",
       key: "id",
       render: (_text, record) => (
         <div className="flex items-center justify-center">
@@ -227,7 +237,7 @@ export default function Product() {
       key: "action",
       render: () => (
         <>
-          <Dropdown menu={{ items }} trigger={["click"]}>
+          <Dropdown menu={{ items }} trigger={["click", "hover"]}>
             <p className="flex cursor-pointer items-center justify-center gap-1 text-[#007bff]">
               Actions
               <ChevronDown size={16} />
@@ -265,9 +275,8 @@ export default function Product() {
         scroll={{
           x: "max-content",
         }}
-        // sticky={{
-        //   offsetHeader: 64,
-        // }}
+        rowSelection={rowSelection}
+        rowKey={(record) => record.id}
       />
 
       {!isLoading && (

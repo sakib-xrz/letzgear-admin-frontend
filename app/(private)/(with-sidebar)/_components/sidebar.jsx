@@ -17,8 +17,6 @@ export default function Sidebar({ children }) {
   const [collapsed, setCollapsed] = useState(isDesktop ? false : true);
   const user = getUserInfo();
 
-  console.log(pathname);
-
   const items = getSidebarItems(user?.role);
 
   return (
