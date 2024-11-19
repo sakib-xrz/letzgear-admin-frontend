@@ -3,14 +3,17 @@
 import TitleWithButton from "@/components/shared/title-with-button";
 import { useGetProductListQuery } from "@/redux/api/productApi";
 import { generateQueryString, sanitizeParams } from "@/utils";
-import { Breadcrumb, Pagination, Table } from "antd";
+import { Breadcrumb, Dropdown, Pagination, Table } from "antd";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import ProductSearchFilter from "./_components/product-search-filter";
+import { Image } from "antd";
+import { ChevronDown, PencilLine, Ruler, Trash2 } from "lucide-react";
+import { Image as ImageIcon } from "lucide-react";
 
-const items = [
+const breadcrumbItems = [
   {
     title: <Link href="/super-admin/dashboard">Dashboard</Link>,
   },
@@ -66,7 +69,67 @@ export default function Product() {
 
   const dataSource = data?.data || [];
 
+  const items = [
+    {
+      key: "1",
+      label: dataSource.images ? (
+        <Link href={""} className="flex items-center gap-2 text-sm">
+          <ImageIcon size={16} className="text-primary" /> Edit Product Image
+        </Link>
+      ) : (
+        <Link href={""} className="flex items-center gap-2 text-sm">
+          <ImageIcon size={16} className="text-primary" /> Add Product Image
+        </Link>
+      ),
+    },
+    {
+      key: "2",
+      label: dataSource.size_variants ? (
+        <Link href={""} className="flex items-center gap-2 text-sm">
+          <Ruler size={16} className="text-primary" /> Edit Size variant
+        </Link>
+      ) : (
+        <Link href={""} className="flex items-center gap-2 text-sm">
+          <Ruler size={16} className="text-primary" /> Add Size variant
+        </Link>
+      ),
+    },
+    {
+      key: "4",
+      label: (
+        <Link href={""} className="flex items-center gap-2 text-sm">
+          <PencilLine size={16} className="text-primary" /> Edit Product
+        </Link>
+      ),
+    },
+    {
+      key: "5",
+      label: (
+        <Link href={""} className="flex items-center gap-2 text-sm">
+          <Trash2 size={16} /> Delete Product
+        </Link>
+      ),
+      danger: true,
+    },
+  ];
+
   const columns = [
+    {
+      title: <div className="text-center">Image</div>,
+      key: "id",
+      render: (_text, record) => (
+        <div className="flex items-center justify-center">
+          <Image
+            src={
+              "https://res.cloudinary.com/dl5rlskcv/image/upload/v1732000963/default-product_ilbqau.jpg"
+            }
+            alt={record.name}
+            width={50}
+            height={50}
+          />
+        </div>
+      ),
+    },
     {
       title: (
         <div className="text-left">
@@ -162,22 +225,22 @@ export default function Product() {
     {
       title: <div className="text-center">Action</div>,
       key: "action",
-      render: (_text, record) => (
-        <div className="flex items-center justify-center space-x-2">
-          <Link href={`/super-admin/product/${record.id}`}>
-            <p className="text-blue-500">View</p>
-          </Link>
-          <Link href={`/super-admin/product/${record.id}/edit`}>
-            <p className="text-blue-500">Edit</p>
-          </Link>
-        </div>
+      render: () => (
+        <>
+          <Dropdown menu={{ items }} trigger={["click"]}>
+            <p className="flex cursor-pointer items-center justify-center gap-1 text-[#007bff]">
+              Actions
+              <ChevronDown size={16} />
+            </p>
+          </Dropdown>
+        </>
       ),
     },
   ];
 
   return (
     <div className="space-y-5">
-      <Breadcrumb items={items} />
+      <Breadcrumb items={breadcrumbItems} />
       <div className="space-y-5">
         <TitleWithButton
           title="Products"

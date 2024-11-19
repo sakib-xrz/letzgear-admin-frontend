@@ -113,6 +113,10 @@
   right: 10px !important;
 }
 
+.ant-image-mask-info {
+  display: none !important;
+}
+
 :where(.css-dev-only-do-not-override-dxd93w).ant-select-dropdown
   .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
   color: #ffffff !important;
