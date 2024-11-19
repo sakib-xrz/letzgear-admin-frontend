@@ -118,8 +118,8 @@
 }
 
 .product .ant-upload.ant-upload-select {
-  width: 10rem !important;
-  height: 10rem !important;
+  width: 8rem !important;
+  height: 8rem !important;
 }
 
 :where(.css-dev-only-do-not-override-dxd93w).ant-select-dropdown
