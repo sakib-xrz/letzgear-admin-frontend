@@ -28,50 +28,111 @@ export default function ManageImageModal({
     >
       <>
         <div className="flex items-center gap-4">
-          <div>
-            <Label required>Primary Image</Label>
-            <div className="relative">
-              <Image
-                src={
-                  "https://res.cloudinary.com/dl5rlskcv/image/upload/v1732000963/default-product_ilbqau.jpg"
-                }
-                alt=""
-                width={1080}
-                height={1080}
-                className="w-full rounded object-cover sm:size-40"
-              />
-              <Button
-                size="small"
-                shape="circle"
-                className="!absolute right-2 top-2"
-                danger
-              >
-                <Trash2 size={16} />
-              </Button>
+          {false ? (
+            <div>
+              <Label required>Primary Image</Label>
+              <div className="relative">
+                <Image
+                  src={
+                    "https://res.cloudinary.com/dl5rlskcv/image/upload/v1732000963/default-product_ilbqau.jpg"
+                  }
+                  alt=""
+                  width={1080}
+                  height={1080}
+                  className="size-40 rounded object-cover"
+                />
+                <Button
+                  size="small"
+                  shape="circle"
+                  className="!absolute right-2 top-2"
+                  danger
+                >
+                  <Trash2 size={16} />
+                </Button>
+              </div>
             </div>
-          </div>
-          <div>
-            <Label required>Secondary Image</Label>
-            <div className="relative">
-              <Image
-                src={
-                  "https://res.cloudinary.com/dl5rlskcv/image/upload/v1732000963/default-product_ilbqau.jpg"
-                }
-                alt=""
-                width={1080}
-                height={1080}
-                className="w-full rounded object-cover sm:size-40"
-              />
-              <Button
-                size="small"
-                shape="circle"
-                className="!absolute right-2 top-2"
-                danger
+          ) : (
+            <div className="product">
+              <Label required>Primary Image</Label>
+              <Upload
+                listType="picture-card"
+                showUploadList={false}
+                accept="image/*"
+                maxCount={1}
+                // onChange={handleChange}
+                // disabled={isUpdateProfilePictureLoading || isUploading}
               >
-                <Trash2 size={16} />
-              </Button>
+                <button
+                  style={{
+                    border: 0,
+                    background: "none",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                  }}
+                  className="!outline-none"
+                >
+                  <Plus size={24} />
+                  <div style={{ marginTop: 8 }}>Upload</div>
+                </button>
+              </Upload>
             </div>
-          </div>
+          )}
+
+          {false ? (
+            <div>
+              <Label required>Primary Image</Label>
+              <div className="relative">
+                <Image
+                  src={
+                    "https://res.cloudinary.com/dl5rlskcv/image/upload/v1732000963/default-product_ilbqau.jpg"
+                  }
+                  alt=""
+                  width={1080}
+                  height={1080}
+                  className="size-40 rounded object-cover"
+                />
+                <Button
+                  size="small"
+                  shape="circle"
+                  className="!absolute right-2 top-2"
+                  danger
+                >
+                  <Trash2 size={16} />
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="product">
+              <Label required>Secondary Image</Label>
+              <Upload
+                listType="picture-card"
+                showUploadList={false}
+                accept="image/*"
+                maxCount={1}
+                // onChange={handleChange}
+                // disabled={isUpdateProfilePictureLoading || isUploading}
+              >
+                <button
+                  style={{
+                    border: 0,
+                    background: "none",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%",
+                  }}
+                  className="!outline-none"
+                >
+                  <Plus size={24} />
+                  <div style={{ marginTop: 8 }}>Upload</div>
+                </button>
+              </Upload>
+            </div>
+          )}
         </div>
 
         <div className="mt-4">
