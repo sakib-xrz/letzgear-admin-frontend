@@ -28,7 +28,7 @@ export default function ManageImageModal({
     >
       <>
         <div className="flex items-center gap-4">
-          {false ? (
+          {true ? (
             <div>
               <Label required>Primary Image</Label>
               <div className="relative">
@@ -81,7 +81,7 @@ export default function ManageImageModal({
             </div>
           )}
 
-          {false ? (
+          {true ? (
             <div>
               <Label required>Primary Image</Label>
               <div className="relative">
@@ -136,11 +136,11 @@ export default function ManageImageModal({
         </div>
 
         <div className="mt-4">
-          <Label className={"mb-2"}>
+          <Label>
             Extra Images <span className="text-gray-500">(max 4)</span>
           </Label>
-          {false ? (
-            <div className="mt-4 grid w-full grid-cols-2 items-center gap-4 sm:grid-cols-4">
+          {true ? (
+            <div className="grid w-full grid-cols-2 items-center gap-4 sm:grid-cols-4">
               {[...Array(4).keys()].map((_, index) => (
                 <div className="relative w-full sm:w-fit" key={index}>
                   <Image
