@@ -50,7 +50,6 @@ export default function CreateProduct() {
       sell_price: 0,
       discount_type: null,
       discount: 0,
-      total_stock: 0,
     },
     onSubmit: async (values) => {
       const payload = {
@@ -254,21 +253,14 @@ export default function CreateProduct() {
             </div>
 
             <FormInput label="Discount" name="discount" formik={formik} />
-
-            <FormInput
-              label="Youtube Video Link"
-              name="youtube_video_link"
-              placeholder="Enter youtube video link"
-              formik={formik}
-            />
-
-            <FormInput
-              label="Total Stock"
-              name="total_stock"
-              formik={formik}
-              required
-            />
           </div>
+
+          <FormInput
+            label="Youtube Video Link"
+            name="youtube_video_link"
+            placeholder="Enter youtube video link"
+            formik={formik}
+          />
 
           <div>
             <div className="mt-5 flex items-center gap-2">
