@@ -108,7 +108,7 @@ export default function Product() {
       key: "2",
       label: (
         <Link href={""} className="flex items-center gap-2 text-sm">
-          <Ruler size={16} className="text-primary" /> Manage Variants
+          <Ruler size={16} className="text-primary" /> Manage Stock
         </Link>
       ),
     },
