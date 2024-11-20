@@ -44,12 +44,13 @@ export default function Product() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [currentProduct, setCurrentProduct] = useState(null);
+  const [currentProductId, setCurrentProductId] = useState(null);
   const [openManageImagesModal, setOpenManageImagesModal] = useState(false);
 
   const [searchKey, setSearchKey] = useState(searchParams.get("search") || "");
 
   const [params, setParams] = useState({
+    id: searchParams.get("id") || null,
     search: searchParams.get("search") || "",
     discount_type: searchParams.get("discount_type") || null,
     is_published: searchParams.get("is_published") || null,
@@ -96,6 +97,7 @@ export default function Product() {
       label: (
         <p
           onClick={() => {
+            setParams((prev) => ({ ...prev, id: currentProductId }));
             setOpenManageImagesModal(true);
           }}
           className="flex items-center gap-2 text-sm"
@@ -247,7 +249,7 @@ export default function Product() {
       render: (_text, record) => (
         <div
           onClick={() => {
-            setCurrentProduct(record);
+            setCurrentProductId(record.id);
           }}
         >
           <Dropdown menu={{ items }} trigger={["click"]}>
@@ -311,7 +313,10 @@ export default function Product() {
         <ManageImageModal
           openManageImagesModal={openManageImagesModal}
           setOpenManageImagesModal={setOpenManageImagesModal}
-          currentProduct={currentProduct}
+          currentProductId={currentProductId}
+          setCurrentProductId={setCurrentProductId}
+          params={params}
+          setParams={setParams}
         />
       )}
     </div>

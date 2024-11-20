@@ -1,4 +1,5 @@
 import Label from "@/components/shared/label";
+import { useGetSingleProductQuery } from "@/redux/api/productApi";
 import {
   useDeleteProductImageMutation,
   useUploadProductImageMutation,
@@ -13,12 +14,23 @@ import { toast } from "sonner";
 export default function ManageImageModal({
   openManageImagesModal,
   setOpenManageImagesModal,
-  currentProduct,
+  currentProductId,
+  setCurrentProductId,
+  params,
+  setParams,
 }) {
+  const { data, isLoading: isCurrentProductLoading } =
+    useGetSingleProductQuery(currentProductId);
   const [uploadProductImage, { isLoading }] = useUploadProductImageMutation();
   const [productType, setProductType] = useState(null);
   const [deleteProductImage, { isLoading: isDeleteLoading }] =
     useDeleteProductImageMutation();
+
+  if (isCurrentProductLoading) {
+    return <>Loading...</>;
+  }
+
+  const currentProduct = data?.data;
 
   const handleUploadImage = async (file, type) => {
     if (!file || isLoading) return;
@@ -31,7 +43,6 @@ export default function ManageImageModal({
       formData.append("image", file.originFileObj);
 
       await uploadProductImage(formData).unwrap();
-
       toast.success("Image uploaded successfully");
     } catch (error) {
       toast.error(error.message || "Failed to upload image");
@@ -65,7 +76,11 @@ export default function ManageImageModal({
   return (
     <Modal
       open={openManageImagesModal}
-      onCancel={() => setOpenManageImagesModal(false)}
+      onCancel={() => {
+        setParams({ ...params, id: null });
+        setCurrentProductId(null);
+        setOpenManageImagesModal(false);
+      }}
       title={
         <div className="pr-8">
           Manage Images for {currentProduct?.name}{" "}
@@ -175,7 +190,7 @@ export default function ManageImageModal({
             </div>
           ) : (
             <div className="product">
-              <Label required>Secondary Image</Label>
+              <Label>Secondary Image</Label>
               <Upload
                 listType="picture-card"
                 showUploadList={false}
