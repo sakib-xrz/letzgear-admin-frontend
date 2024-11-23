@@ -72,7 +72,7 @@
   .ant-table-tbody
   .ant-table-row.ant-table-row-selected
   > .ant-table-cell {
-  background-color: #d1d5db !important;
+  background-color: #dddddd !important;
 }
 
 .ant-table-cell-with-append {
