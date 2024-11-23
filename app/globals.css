@@ -120,6 +120,7 @@
 .product .ant-upload.ant-upload-select {
   width: 8rem !important;
   height: 8rem !important;
+  background-color: #ffffff !important;
 }
 
 :where(.css-dev-only-do-not-override-dxd93w).ant-select-dropdown
