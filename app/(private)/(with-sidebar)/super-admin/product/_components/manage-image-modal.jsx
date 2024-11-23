@@ -27,7 +27,7 @@ export default function ManageImageModal({
     useDeleteProductImageMutation();
 
   if (isCurrentProductLoading) {
-    return <>Loading...</>;
+    return "Loading...";
   }
 
   const currentProduct = data?.data;
@@ -72,6 +72,11 @@ export default function ManageImageModal({
 
   const secondaryImage =
     imageList && imageList.find((image) => image.type === "SECONDARY");
+
+  const extraImages =
+    imageList && imageList.filter((image) => image.type === "EXTRA");
+
+  console.log("extraImages", extraImages);
 
   return (
     <Modal
@@ -237,54 +242,69 @@ export default function ManageImageModal({
           <Label>
             Extra Images <span className="text-gray-500">(max 4)</span>
           </Label>
-          {true ? (
-            <div className="grid w-full grid-cols-2 items-center gap-4 sm:grid-cols-4">
-              {[...Array(4).keys()].map((_, index) => (
-                <div className="relative w-full sm:w-fit" key={index}>
-                  <Image
-                    src={
-                      "https://res.cloudinary.com/dl5rlskcv/image/upload/v1732000963/default-product_ilbqau.jpg"
+          <div className="space-y-2">
+            {extraImages.length < 4 && (
+              <div>
+                <Dragger
+                  maxCount={1}
+                  multiple={false}
+                  accept=".jpg,.jpeg,.png"
+                  onChange={({ file }) => {
+                    if (file.status === "done" || file.status === "uploading") {
+                      handleUploadImage(file, "EXTRA");
                     }
-                    alt=""
-                    width={128}
-                    height={128}
-                    className="w-full rounded object-cover sm:size-32"
-                  />
-                  <Button
-                    size="small"
-                    shape="circle"
-                    className="!absolute right-2 top-2"
-                    danger
-                  >
-                    <Trash2 size={16} />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div>
-              <Dragger
-                maxCount={4}
-                multiple={false}
-                accept=".jpg,.jpeg,.png"
-                onChange={({ file }) => {
-                  // formik.setFieldValue("image", file?.originFileObj);
-                }}
-                fileList={[]}
-                className="w-full"
-              >
-                <p className="flex justify-center">
-                  <ImageUp className="size-8 opacity-70" />
-                </p>
-                <p className="ant-upload-text !mt-3">
-                  Click or drag file to this area to upload
-                </p>
-                <p className="ant-upload-hint !text-sm">
-                  Support only .jpg, .jpeg, .png file format.
-                </p>
-              </Dragger>
-            </div>
-          )}
+                  }}
+                  fileList={[]}
+                  className="w-full"
+                  disabled={isLoading && productType === "EXTRA"}
+                >
+                  <p className="flex justify-center">
+                    {isLoading && productType === "EXTRA" ? (
+                      <Loader2 className="size-8 animate-spin" />
+                    ) : (
+                      <ImageUp className="size-8 opacity-70" />
+                    )}
+                  </p>
+                  <p className="ant-upload-text !mt-3">
+                    {isLoading && productType === "EXTRA"
+                      ? "Uploading..."
+                      : "Click or drag file to this area to upload"}
+                  </p>
+                  <p className="ant-upload-hint !text-sm">
+                    {isLoading && productType === "EXTRA"
+                      ? "It may take a few seconds to upload the image."
+                      : "Support only .jpg, .jpeg, .png file format."}
+                  </p>
+                </Dragger>
+              </div>
+            )}
+
+            {extraImages.length > 0 && (
+              <div className="grid w-full grid-cols-2 items-center gap-4 sm:grid-cols-4">
+                {extraImages.map((image) => (
+                  <div className="relative w-full sm:w-fit" key={image}>
+                    <Image
+                      src={image?.image_url}
+                      alt=""
+                      width={128}
+                      height={128}
+                      className="w-full rounded object-cover sm:size-32"
+                    />
+                    <Button
+                      size="small"
+                      shape="circle"
+                      className="!disabled:cursor-not-allowed !absolute right-2 top-2"
+                      danger
+                      onClick={() => handleDeleteImage(image.id, "EXTRA")}
+                      disabled={isDeleteLoading && productType === "EXTRA"}
+                    >
+                      <Trash2 size={16} />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </>
     </Modal>
