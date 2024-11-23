@@ -216,7 +216,7 @@ export default function Product() {
           </p>
           <div className="text-center text-sm font-medium text-green-600">
             {record.discount > 0 &&
-              `${record.discount} ${record.discount_type === "PERCENTAGE" ? "%" : "BDT"} off`}
+              `${record.discount}${record.discount_type === "PERCENTAGE" ? "%" : " BDT"} off`}
           </div>
         </>
       ),
