@@ -120,7 +120,11 @@ export default function ManageImageModal({
                   onClick={() => handleDeleteImage(primaryImage.id, "PRIMARY")}
                   disabled={isDeleteLoading && productType === "PRIMARY"}
                 >
-                  <Trash2 size={16} />
+                  {isDeleteLoading && productType === "PRIMARY" ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <Trash2 size={16} />
+                  )}
                 </Button>
               </div>
             </div>
@@ -189,7 +193,11 @@ export default function ManageImageModal({
                   }
                   disabled={isDeleteLoading && productType === "SECONDARY"}
                 >
-                  <Trash2 size={16} />
+                  {isDeleteLoading && productType === "SECONDARY" ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <Trash2 size={16} />
+                  )}
                 </Button>
               </div>
             </div>
@@ -298,7 +306,11 @@ export default function ManageImageModal({
                       onClick={() => handleDeleteImage(image.id, "EXTRA")}
                       disabled={isDeleteLoading && productType === "EXTRA"}
                     >
-                      <Trash2 size={16} />
+                      {isDeleteLoading && productType === "EXTRA" ? (
+                        <Loader2 size={16} className="animate-spin" />
+                      ) : (
+                        <Trash2 size={16} />
+                      )}
                     </Button>
                   </div>
                 ))}

@@ -191,33 +191,34 @@ export default function Product() {
           <h4>
             Price{" "}
             <small className="font-normal text-gray-500">
-              (Buy, Cost, Sell)
+              (<span className="text-rose-600">Buy</span>,{" "}
+              <span className="text-orange-600">Cost</span>,{" "}
+              <span className="text-blue-600">Sell</span>)
             </small>
           </h4>
         </div>
       ),
       key: "price",
       render: (_text, record) => (
-        <p className="text-center font-medium">
-          {record.buy_price}, {record.cost_price},{" "}
-          <span className="line-through">
-            {record.discount !== 0 ? record.sell_price : null}
-          </span>{" "}
-          {record.discount !== 0 && record.discount_type === "PERCENTAGE"
-            ? record.sell_price - (record.sell_price * record.discount) / 100
-            : record.sell_price - record.discount}
-        </p>
-      ),
-    },
-    {
-      title: <div className="text-center">Discount</div>,
-      key: "discount",
-      render: (_text, record) => (
-        <div className="text-center">
-          {record.discount === 0
-            ? "N/A"
-            : `${record.discount} ${record.discount_type === "PERCENTAGE" ? "%" : "BDT"}`}
-        </div>
+        <>
+          <p className="text-center font-medium">
+            <span className="text-rose-600">{record.buy_price}</span>,{" "}
+            <span className="text-orange-600">{record.cost_price}</span>,{" "}
+            <span className="text-gray-500 line-through">
+              {record.discount !== 0 ? record.sell_price : null}
+            </span>{" "}
+            <span className="font-semibold text-blue-600">
+              {record.discount !== 0 && record.discount_type === "PERCENTAGE"
+                ? record.sell_price -
+                  (record.sell_price * record.discount) / 100
+                : record.sell_price - record.discount}
+            </span>
+          </p>
+          <div className="text-center text-sm font-medium text-green-600">
+            {record.discount > 0 &&
+              `${record.discount} ${record.discount_type === "PERCENTAGE" ? "%" : "BDT"} off`}
+          </div>
+        </>
       ),
     },
     {
