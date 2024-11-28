@@ -76,8 +76,6 @@ export default function ManageImageModal({
   const extraImages =
     imageList && imageList.filter((image) => image.type === "EXTRA");
 
-  console.log("extraImages", extraImages);
-
   return (
     <Modal
       open={openManageImagesModal}
@@ -92,6 +90,9 @@ export default function ManageImageModal({
           <span className="font-normal text-gray-500">
             ({currentProduct?.sku})
           </span>
+          <p className="text-xs font-normal text-gray-500">
+            Recommended product size: 1280x1280
+          </p>
         </div>
       }
       centered
@@ -121,7 +122,7 @@ export default function ManageImageModal({
                   disabled={isDeleteLoading && productType === "PRIMARY"}
                 >
                   {isDeleteLoading && productType === "PRIMARY" ? (
-                    <Loader2 size={16} className="animate-spin" />
+                    <Loader2 size={16} className="animate-spin text-white" />
                   ) : (
                     <Trash2 size={16} />
                   )}
@@ -194,7 +195,7 @@ export default function ManageImageModal({
                   disabled={isDeleteLoading && productType === "SECONDARY"}
                 >
                   {isDeleteLoading && productType === "SECONDARY" ? (
-                    <Loader2 size={16} className="animate-spin" />
+                    <Loader2 size={16} className="animate-spin text-white" />
                   ) : (
                     <Trash2 size={16} />
                   )}
@@ -290,7 +291,7 @@ export default function ManageImageModal({
             {extraImages.length > 0 && (
               <div className="grid w-full grid-cols-2 items-center gap-4 sm:grid-cols-4">
                 {extraImages.map((image) => (
-                  <div className="relative w-full sm:w-fit" key={image}>
+                  <div className="relative w-full sm:w-fit" key={image.id}>
                     <Image
                       src={image?.image_url}
                       alt=""
@@ -307,7 +308,10 @@ export default function ManageImageModal({
                       disabled={isDeleteLoading && productType === "EXTRA"}
                     >
                       {isDeleteLoading && productType === "EXTRA" ? (
-                        <Loader2 size={16} className="animate-spin" />
+                        <Loader2
+                          size={16}
+                          className="animate-spin text-white"
+                        />
                       ) : (
                         <Trash2 size={16} />
                       )}

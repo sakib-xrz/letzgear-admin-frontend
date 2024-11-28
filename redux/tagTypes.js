@@ -5,8 +5,6 @@ export const tagTypes = {
   category: "category",
   size: "size",
   product: "product",
-  productImage: "productImage",
-  productVariant: "productVariant",
 };
 
 export const tagTypesList = [

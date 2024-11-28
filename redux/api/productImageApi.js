@@ -12,14 +12,14 @@ export const productImageApi = baseApi.injectEndpoints({
           "Content-Type": "multipart/form-data",
         },
       }),
-      invalidatesTags: [tagTypes.product, tagTypes.productImage],
+      invalidatesTags: [tagTypes.product],
     }),
     deleteProductImage: build.mutation({
       query: (id) => ({
         url: `/product-images/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [tagTypes.product, tagTypes.productImage],
+      invalidatesTags: [tagTypes.product],
     }),
   }),
 });
