@@ -7,6 +7,7 @@ import {
   useGetCategoriesQuery,
 } from "@/redux/api/categoryApi";
 import { transformCategories } from "@/utils";
+import { transformCategories as cascadeTransformCategories } from "@/utils/constant";
 import { Breadcrumb, Table, Modal, Button, Switch } from "antd";
 import Image from "next/image";
 import Link from "next/link";
@@ -38,6 +39,8 @@ export default function Category() {
   const [id, setId] = useState(null);
 
   const dataSource = transformCategories(data?.data || []);
+
+  const options = cascadeTransformCategories(data?.data || []);
 
   const columns = [
     {
@@ -190,6 +193,7 @@ export default function Category() {
             setOpen={setOpenEditModal}
             data={editableCategory}
             setData={setEditableCategory}
+            options={options}
           />
         )}
       </div>
