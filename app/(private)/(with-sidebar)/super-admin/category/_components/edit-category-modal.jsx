@@ -1,7 +1,7 @@
 import FormInput from "@/components/form/form-input";
 import Label from "@/components/shared/label";
 import { useUpdateCategoryMutation } from "@/redux/api/categoryApi";
-import { Button, Cascader, Modal } from "antd";
+import { Button, Cascader, Checkbox, Modal } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import { useFormik } from "formik";
 import { ImageUp, X } from "lucide-react";
@@ -16,11 +16,13 @@ export default function EditCategoryModal({
   setData,
   options,
 }) {
+  console.log(data);
   const [updateCategory, { isLoading }] = useUpdateCategoryMutation();
   const formik = useFormik({
     initialValues: {
       name: data.name,
       parent_category_id: data.parent_category_id,
+      make_parent: false,
       route: data.route,
       image: data.image,
     },
@@ -59,7 +61,7 @@ export default function EditCategoryModal({
     <form onSubmit={formik.handleSubmit} className="space-y-5">
       <Modal
         open={open}
-        title="Edit Category"
+        title={`Edit Category - ${data.name}`}
         icon={<></>}
         closable={false}
         footer={
@@ -142,7 +144,9 @@ export default function EditCategoryModal({
               Parent Category (Only change if needed)
             </Label>
             <Cascader
-              options={options}
+              options={
+                options.filter((option) => option.value !== data.id) || []
+              }
               onChange={(value) => {
                 formik.setFieldValue(
                   "parent_category_id",
@@ -152,8 +156,19 @@ export default function EditCategoryModal({
               changeOnSelect
               className="!w-full"
               placeholder="Select Parent Category"
+              disabled={formik.values.make_parent}
             />
           </div>
+
+          <Checkbox
+            onChange={(e) => {
+              formik.setFieldValue("make_parent", e.target.checked);
+              formik.setFieldValue("parent_category_id", null);
+            }}
+            disabled={data.parent_category_id === null}
+          >
+            Make this category a parent category
+          </Checkbox>
 
           <div className="grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2">
             <FormInput
