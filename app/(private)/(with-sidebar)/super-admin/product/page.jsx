@@ -143,7 +143,12 @@ export default function Product() {
           <Image.PreviewGroup
             items={
               record.images && record.images.length
-                ? record.images.map((image) => image.image_url)
+                ? [...record.images]
+                    .sort((a, b) => {
+                      const order = { PRIMARY: 1, SECONDARY: 2, EXTRA: 3 };
+                      return (order[a.type] || 4) - (order[b.type] || 4);
+                    })
+                    .map((image) => image.image_url)
                 : [
                     "https://res.cloudinary.com/dl5rlskcv/image/upload/v1732000963/default-product_ilbqau.jpg",
                   ]
@@ -151,10 +156,9 @@ export default function Product() {
           >
             <Image
               src={
-                record.images && record.images.length > 0
-                  ? record.images.find((image) => image.type === "PRIMARY")
-                      ?.image_url
-                  : "https://res.cloudinary.com/dl5rlskcv/image/upload/v1732000963/default-product_ilbqau.jpg"
+                record.images?.find((image) => image.type === "PRIMARY")
+                  ?.image_url ||
+                "https://res.cloudinary.com/dl5rlskcv/image/upload/v1732000963/default-product_ilbqau.jpg"
               }
               alt={record.name}
               width={50}
