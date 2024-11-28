@@ -9,6 +9,7 @@ export default function ProductSearchFilter({
   setParams,
   searchKey,
   handleSearchChange,
+  categoryData,
   data,
 }) {
   const [isFilterVisible, setIsFilterVisible] = useState(false);
@@ -41,6 +42,26 @@ export default function ProductSearchFilter({
           {isFilterVisible && (
             <div className="absolute left-0 top-20 z-10 w-full space-y-3 rounded border bg-white p-4 shadow">
               <div className="flex items-center gap-4 max-lg:flex-col">
+                <div className="flex w-full flex-col gap-2">
+                  <Label htmlFor="category_id">Select Category</Label>
+                  <Select
+                    name="category_id"
+                    value={params.category_id}
+                    onChange={(value) =>
+                      setParams({ ...params, category_id: value })
+                    }
+                    options={
+                      categoryData?.data?.map((category) => ({
+                        label: category.name,
+                        value: category.id,
+                      })) || []
+                    }
+                    placeholder="Filter by category"
+                    optionFilterProp="label"
+                    allowClear
+                    showSearch
+                  />
+                </div>
                 <div className="flex w-full flex-col gap-2">
                   <Label htmlFor="discount_type">Discount Type</Label>
                   <Select

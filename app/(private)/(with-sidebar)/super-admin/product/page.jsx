@@ -13,6 +13,7 @@ import { Image } from "antd";
 import { ChevronDown, PencilLine, Ruler, Trash2 } from "lucide-react";
 import { Image as ImageIcon } from "lucide-react";
 import ManageImageModal from "./_components/manage-image-modal";
+import { useGetCategoriesListQuery } from "@/redux/api/categoryApi";
 
 const breadcrumbItems = [
   {
@@ -49,9 +50,13 @@ export default function Product() {
 
   const [searchKey, setSearchKey] = useState(searchParams.get("search") || "");
 
+  const { data: categoryData, isLoading: isCategoryListLoading } =
+    useGetCategoriesListQuery();
+
   const [params, setParams] = useState({
     id: searchParams.get("id") || null,
     search: searchParams.get("search") || "",
+    category_id: searchParams.get("category_id") || null,
     discount_type: searchParams.get("discount_type") || null,
     is_published: searchParams.get("is_published") || null,
     is_featured: searchParams.get("is_featured") || null,
@@ -296,6 +301,7 @@ export default function Product() {
         setParams={setParams}
         searchKey={searchKey}
         handleSearchChange={handleSearchChange}
+        categoryData={categoryData}
         data={data}
       />
 
@@ -303,7 +309,7 @@ export default function Product() {
         bordered
         dataSource={dataSource}
         columns={columns}
-        loading={isLoading}
+        loading={isLoading || isCategoryListLoading}
         pagination={false}
         scroll={{
           x: "max-content",
