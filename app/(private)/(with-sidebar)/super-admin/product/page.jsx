@@ -140,16 +140,27 @@ export default function Product() {
       key: "id",
       render: (_text, record) => (
         <div className="flex items-center justify-center">
-          <Image
-            src={
-              record.images && record.images.length > 0
-                ? record.images[0].image_url
-                : "https://res.cloudinary.com/dl5rlskcv/image/upload/v1732000963/default-product_ilbqau.jpg"
+          <Image.PreviewGroup
+            items={
+              record.images && record.images.length
+                ? record.images.map((image) => image.image_url)
+                : [
+                    "https://res.cloudinary.com/dl5rlskcv/image/upload/v1732000963/default-product_ilbqau.jpg",
+                  ]
             }
-            alt={record.name}
-            width={50}
-            height={50}
-          />
+          >
+            <Image
+              src={
+                record.images && record.images.length > 0
+                  ? record.images.find((image) => image.type === "PRIMARY")
+                      ?.image_url
+                  : "https://res.cloudinary.com/dl5rlskcv/image/upload/v1732000963/default-product_ilbqau.jpg"
+              }
+              alt={record.name}
+              width={50}
+              height={50}
+            />
+          </Image.PreviewGroup>
         </div>
       ),
     },
