@@ -19,6 +19,7 @@ export default function ManageImageModal({
   params,
   setParams,
 }) {
+  const [deleteImageId, setDeleteImageId] = useState(null);
   const { data, isLoading: isCurrentProductLoading } =
     useGetSingleProductQuery(currentProductId);
   const [uploadProductImage, { isLoading }] = useUploadProductImageMutation();
@@ -55,6 +56,7 @@ export default function ManageImageModal({
     if (isDeleteLoading) return;
 
     try {
+      setDeleteImageId(imageId);
       setProductType(type);
       await deleteProductImage(imageId).unwrap();
       toast.success("Image deleted successfully");
@@ -62,6 +64,7 @@ export default function ManageImageModal({
       toast.error(error.message || "Failed to delete image");
     } finally {
       setProductType(null);
+      setDeleteImageId(null);
     }
   };
 
@@ -305,9 +308,15 @@ export default function ManageImageModal({
                       className="!disabled:cursor-not-allowed !absolute right-2 top-2"
                       danger
                       onClick={() => handleDeleteImage(image.id, "EXTRA")}
-                      disabled={isDeleteLoading && productType === "EXTRA"}
+                      disabled={
+                        isDeleteLoading &&
+                        productType === "EXTRA" &&
+                        deleteImageId === image.id
+                      }
                     >
-                      {isDeleteLoading && productType === "EXTRA" ? (
+                      {isDeleteLoading &&
+                      productType === "EXTRA" &&
+                      deleteImageId === image.id ? (
                         <Loader2
                           size={16}
                           className="animate-spin text-white"
