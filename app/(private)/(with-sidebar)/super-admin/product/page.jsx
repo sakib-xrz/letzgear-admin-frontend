@@ -245,7 +245,27 @@ export default function Product() {
       title: <div className="text-center">Stock</div>,
       key: "stock",
       render: (_text, record) => (
-        <div className="text-center">{record.total_stock}</div>
+        <div>
+          <p
+            className={`text-center font-semibold ${record.total_stock === 0 ? "text-danger" : ""}`}
+          >
+            {record.total_stock}
+          </p>
+          {record.variants &&
+            record.variants.length > 0 &&
+            record.variants[0].size && (
+              <p className="text-center text-gray-500">
+                (
+                {record.variants.map((variant, index) => (
+                  <span key={index} className="text-xs">
+                    {variant.size}={variant.stock}
+                    {index < record.variants.length - 1 ? ", " : ""}
+                  </span>
+                ))}
+                )
+              </p>
+            )}
+        </div>
       ),
     },
     {
