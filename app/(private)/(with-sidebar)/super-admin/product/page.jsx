@@ -14,6 +14,7 @@ import { ChevronDown, PencilLine, Ruler, Trash2 } from "lucide-react";
 import { Image as ImageIcon } from "lucide-react";
 import ManageImageModal from "./_components/manage-image-modal";
 import { useGetCategoriesListQuery } from "@/redux/api/categoryApi";
+import ManageStockModal from "./_components/manage-stock-modal";
 
 const breadcrumbItems = [
   {
@@ -47,6 +48,7 @@ export default function Product() {
 
   const [currentProductId, setCurrentProductId] = useState(null);
   const [openManageImagesModal, setOpenManageImagesModal] = useState(false);
+  const [openManageStockModal, setOpenManageStockModal] = useState(false);
 
   const [searchKey, setSearchKey] = useState(searchParams.get("search") || "");
 
@@ -92,7 +94,10 @@ export default function Product() {
     setParams((prev) => ({ ...prev, page }));
   };
 
-  const { data, isLoading } = useGetProductListQuery(sanitizeParams(params));
+  const { id, ...restParams } = params;
+  const { data, isLoading } = useGetProductListQuery(
+    sanitizeParams(restParams),
+  );
 
   const dataSource = data?.data || [];
 
@@ -114,9 +119,15 @@ export default function Product() {
     {
       key: "2",
       label: (
-        <Link href={""} className="flex items-center gap-2 text-sm">
+        <p
+          onClick={() => {
+            setParams((prev) => ({ ...prev, id: currentProductId }));
+            setOpenManageStockModal(true);
+          }}
+          className="flex items-center gap-2 text-sm"
+        >
           <Ruler size={16} className="text-primary" /> Manage Stock
-        </Link>
+        </p>
       ),
     },
     {
@@ -357,6 +368,17 @@ export default function Product() {
         <ManageImageModal
           openManageImagesModal={openManageImagesModal}
           setOpenManageImagesModal={setOpenManageImagesModal}
+          currentProductId={currentProductId}
+          setCurrentProductId={setCurrentProductId}
+          params={params}
+          setParams={setParams}
+        />
+      )}
+
+      {openManageStockModal && (
+        <ManageStockModal
+          openManageStockModal={openManageStockModal}
+          setOpenManageStockModal={setOpenManageStockModal}
           currentProductId={currentProductId}
           setCurrentProductId={setCurrentProductId}
           params={params}
