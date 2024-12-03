@@ -233,7 +233,7 @@ export default function Product() {
           </h4>
         </div>
       ),
-      key: "sell_price",
+      key: "buy_price",
       render: (_text, record) => (
         <>
           <p className="text-center font-medium">
@@ -293,7 +293,6 @@ export default function Product() {
           {record.is_published ? "Yes" : "No"}
         </div>
       ),
-      sorter: true,
     },
     {
       title: <div className="text-center">Featured</div>,
@@ -303,7 +302,6 @@ export default function Product() {
           {record.is_featured ? "Yes" : "No"}
         </div>
       ),
-      sorter: true,
     },
     {
       title: <div className="text-center">Action</div>,

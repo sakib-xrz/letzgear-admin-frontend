@@ -37,7 +37,9 @@ export default function ProductSearchFilter({
                 <SlidersHorizontal className="size-5 text-primary" />
               )
             }
-          />
+          >
+            {isFilterVisible ? "Close" : "Filter"}
+          </Button>
 
           {isFilterVisible && (
             <div className="absolute left-0 top-20 z-10 w-full space-y-3 rounded border bg-white p-4 shadow">
