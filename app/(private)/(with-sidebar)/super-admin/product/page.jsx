@@ -62,6 +62,8 @@ export default function Product() {
     discount_type: searchParams.get("discount_type") || null,
     is_published: searchParams.get("is_published") || null,
     is_featured: searchParams.get("is_featured") || null,
+    sort_by: searchParams.get("sort_by") || "created_at",
+    sort_order: searchParams.get("sort_order") || "desc",
     page: Number(searchParams.get("page")) || 1,
     limit: Number(searchParams.get("limit")) || 10,
   });
@@ -95,7 +97,7 @@ export default function Product() {
   };
 
   const { id, ...restParams } = params;
-  const { data, isLoading } = useGetProductListQuery(
+  const { data, isLoading, isFetching } = useGetProductListQuery(
     sanitizeParams(restParams),
   );
 
@@ -202,6 +204,8 @@ export default function Product() {
           </div>
         </div>
       ),
+      width: 350,
+      sorter: true,
     },
     {
       title: "Category",
@@ -229,7 +233,7 @@ export default function Product() {
           </h4>
         </div>
       ),
-      key: "price",
+      key: "sell_price",
       render: (_text, record) => (
         <>
           <p className="text-center font-medium">
@@ -239,10 +243,9 @@ export default function Product() {
               {record.discount !== 0 ? record.sell_price : null}
             </span>{" "}
             <span className="font-semibold text-blue-600">
-              {record.discount !== 0 && record.discount_type === "PERCENTAGE"
-                ? record.sell_price -
-                  (record.sell_price * record.discount) / 100
-                : record.sell_price - record.discount}
+              {record.discount !== 0
+                ? record.discounted_price
+                : record.sell_price}
             </span>
           </p>
           <div className="text-center text-sm font-medium text-green-600">
@@ -251,10 +254,11 @@ export default function Product() {
           </div>
         </>
       ),
+      sorter: true,
     },
     {
       title: <div className="text-center">Stock</div>,
-      key: "stock",
+      key: "total_stock",
       render: (_text, record) => (
         <div>
           <p
@@ -278,6 +282,8 @@ export default function Product() {
             )}
         </div>
       ),
+      width: 250,
+      sorter: true,
     },
     {
       title: <div className="text-center">Published</div>,
@@ -287,6 +293,7 @@ export default function Product() {
           {record.is_published ? "Yes" : "No"}
         </div>
       ),
+      sorter: true,
     },
     {
       title: <div className="text-center">Featured</div>,
@@ -296,6 +303,7 @@ export default function Product() {
           {record.is_featured ? "Yes" : "No"}
         </div>
       ),
+      sorter: true,
     },
     {
       title: <div className="text-center">Action</div>,
@@ -316,6 +324,17 @@ export default function Product() {
       ),
     },
   ];
+
+  const handleTableChange = (_pagination, _filters, sorter) => {
+    const { order, columnKey } = sorter;
+
+    setParams((prev) => ({
+      ...prev,
+      sort_by: columnKey || "created_at",
+      sort_order:
+        order === "ascend" ? "asc" : order === "descend" ? "desc" : "desc",
+    }));
+  };
 
   return (
     <div className="space-y-5">
@@ -340,13 +359,14 @@ export default function Product() {
         bordered
         dataSource={dataSource}
         columns={columns}
-        loading={isLoading || isCategoryListLoading}
+        loading={isLoading || isCategoryListLoading || isFetching}
         pagination={false}
         scroll={{
           x: "max-content",
         }}
         rowSelection={rowSelection}
         rowKey={(record) => record.id}
+        onChange={handleTableChange}
       />
 
       {!isLoading && (
