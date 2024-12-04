@@ -79,7 +79,7 @@ export default function AddCategory() {
   const options = transformCategories(data?.data);
 
   return (
-    <div className="space-y-5 lg:space-y-10">
+    <div className="space-y-5">
       <Breadcrumb items={items} />
 
       <div className="space-y-3 sm:rounded-md sm:bg-white sm:p-6 sm:shadow lg:mx-auto lg:w-8/12 lg:p-8">

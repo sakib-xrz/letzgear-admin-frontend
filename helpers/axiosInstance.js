@@ -64,10 +64,11 @@ axiosInstance.interceptors.response.use(
       }
     }
     // General error handling if it's not a token expiration issue
+
     const errorResponse = {
       status: error?.response?.status || 500,
       message: error?.response?.data?.message || "Something went wrong!!!",
-      errorMessages: error?.response?.data?.errors || [],
+      errorMessages: error?.response?.data?.error || [],
     };
 
     // Reject the promise with the error response so it can be handled by calling code

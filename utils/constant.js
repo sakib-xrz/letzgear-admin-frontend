@@ -67,8 +67,8 @@ export const getSidebarItems = (role) => {
     ]),
     getItem("Manage Product", "/super-admin/product", <Box />, [
       getItem("Product Size", "/super-admin/product/size"),
-      // getItem("Product List", "/super-admin/product"),
-      // getItem("Add Product", "/super-admin/product/add"),
+      getItem("Product List", "/super-admin/product"),
+      getItem("Add Product", "/super-admin/product/add"),
     ]),
   ];
 
@@ -95,3 +95,16 @@ function transformCategory(category) {
     ),
   };
 }
+
+export const discountOptions = [
+  {
+    key: "1",
+    value: "PERCENTAGE",
+    label: "Percentage",
+  },
+  {
+    key: "2",
+    value: "FLAT",
+    label: "Flat",
+  },
+];

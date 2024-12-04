@@ -47,7 +47,7 @@ export default function Navbar() {
           <Link href={isLoading ? "#" : `/${role}/dashboard`}>
             <Image
               src={logo}
-              alt="telehealth logo"
+              alt=""
               className="w-auto cursor-pointer max-xs:h-5 xs:h-8 sm:h-10"
               quality={100}
               loading="eager"

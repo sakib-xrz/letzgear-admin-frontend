@@ -10,6 +10,13 @@ export const categoryApi = baseApi.injectEndpoints({
       }),
       providesTags: [tagTypes.category],
     }),
+    getCategoriesList: build.query({
+      query: () => ({
+        url: "/categories/list",
+        method: "GET",
+      }),
+      providesTags: [tagTypes.category],
+    }),
     createCategory: build.mutation({
       query: (data) => ({
         url: "/categories",
@@ -51,6 +58,7 @@ export const categoryApi = baseApi.injectEndpoints({
 
 export const {
   useGetCategoriesQuery,
+  useGetCategoriesListQuery,
   useCreateCategoryMutation,
   useChangeCategoryStatusMutation,
   useUpdateCategoryMutation,
