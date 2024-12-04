@@ -78,10 +78,9 @@ export default function CreateProduct({ params: { id } }) {
         cost_price: parseFloat(values.cost_price),
         sell_price: parseFloat(values.sell_price),
         discount: parseFloat(values.discount),
-        total_stock: parseInt(values.total_stock),
       };
       try {
-        await updateProduct({ id, data: sanitizeParams(payload) }).unwrap();
+        await updateProduct({ id, data: payload }).unwrap();
         toast.success("Product update successfully");
         router.push("/super-admin/product");
       } catch (error) {

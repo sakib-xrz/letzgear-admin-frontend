@@ -95,7 +95,7 @@ export default function ProductSearchFilter({
                     allowClear
                   />
                 </div>
-                <div className="flex w-full flex-col gap-2">
+                {/* <div className="flex w-full flex-col gap-2">
                   <Label htmlFor="is_featured">Featured Status</Label>
                   <Select
                     name="is_featured"
@@ -110,7 +110,7 @@ export default function ProductSearchFilter({
                     placeholder="Filter by featured status"
                     allowClear
                   />
-                </div>
+                </div> */}
               </div>
             </div>
           )}

@@ -167,7 +167,7 @@ export default function EditCategoryModal({
             }}
             disabled={data.parent_category_id === null}
           >
-            Make this category a parent category
+            Make this category as a parent category
           </Checkbox>
 
           <div className="grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2">

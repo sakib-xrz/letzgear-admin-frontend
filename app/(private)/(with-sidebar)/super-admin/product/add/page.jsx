@@ -74,7 +74,6 @@ export default function CreateProduct() {
         cost_price: parseFloat(values.cost_price),
         sell_price: parseFloat(values.sell_price),
         discount: parseFloat(values.discount),
-        total_stock: parseInt(values.total_stock),
       };
       try {
         await createProduct(sanitizeParams(payload)).unwrap();

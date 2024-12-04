@@ -4,9 +4,18 @@ import TitleWithButton from "@/components/shared/title-with-button";
 import {
   useDeleteProductMutation,
   useGetProductListQuery,
+  useUpdatePublishStatusMutation,
 } from "@/redux/api/productApi";
 import { generateQueryString, sanitizeParams } from "@/utils";
-import { Breadcrumb, Button, Dropdown, Modal, Pagination, Table } from "antd";
+import {
+  Breadcrumb,
+  Button,
+  Dropdown,
+  Modal,
+  Pagination,
+  Switch,
+  Table,
+} from "antd";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -30,21 +39,21 @@ const breadcrumbItems = [
 ];
 
 // rowSelection objects indicates the need for row selection
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows,
-    );
-  },
-  onSelect: (record, selected, selectedRows) => {
-    console.log(record, selected, selectedRows);
-  },
-  onSelectAll: (selected, selectedRows, changeRows) => {
-    console.log(selected, selectedRows, changeRows);
-  },
-};
+// const rowSelection = {
+//   onChange: (selectedRowKeys, selectedRows) => {
+//     console.log(
+//       `selectedRowKeys: ${selectedRowKeys}`,
+//       "selectedRows: ",
+//       selectedRows,
+//     );
+//   },
+//   onSelect: (record, selected, selectedRows) => {
+//     console.log(record, selected, selectedRows);
+//   },
+//   onSelectAll: (selected, selectedRows, changeRows) => {
+//     console.log(selected, selectedRows, changeRows);
+//   },
+// };
 
 export default function Product() {
   const router = useRouter();
@@ -62,6 +71,9 @@ export default function Product() {
 
   const [deleteProduct, { isLoading: isDeleteLoading }] =
     useDeleteProductMutation();
+
+  const [updatePublishStatus, { isLoading: isUpdatePublishStatusLoading }] =
+    useUpdatePublishStatusMutation();
 
   const [params, setParams] = useState({
     id: searchParams.get("id") || null,
@@ -310,20 +322,39 @@ export default function Product() {
       title: <div className="text-center">Published</div>,
       key: "is_published",
       render: (_text, record) => (
-        <div className="mx-auto w-10 text-center">
-          {record.is_published ? "Yes" : "No"}
+        <div className="flex justify-center">
+          <Switch
+            size="small"
+            checked={record.is_published}
+            onChange={async () => {
+              setCurrentProductId(record.id);
+              try {
+                await updatePublishStatus(record.id).unwrap();
+                toast.success("Product status changed successfully");
+              } catch (error) {
+                toast.error(
+                  error.message || "Failed to change category status",
+                );
+              } finally {
+                setCurrentProductId(null);
+              }
+            }}
+            loading={
+              isUpdatePublishStatusLoading && currentProductId === record.id
+            }
+          />
         </div>
       ),
     },
-    {
-      title: <div className="text-center">Featured</div>,
-      key: "is_featured",
-      render: (_text, record) => (
-        <div className="mx-auto w-10 text-center">
-          {record.is_featured ? "Yes" : "No"}
-        </div>
-      ),
-    },
+    // {
+    //   title: <div className="text-center">Featured</div>,
+    //   key: "is_featured",
+    //   render: (_text, record) => (
+    //     <div className="mx-auto w-10 text-center">
+    //       {record.is_featured ? "Yes" : "No"}
+    //     </div>
+    //   ),
+    // },
     {
       title: <div className="text-center">Action</div>,
       key: "action",
@@ -393,7 +424,7 @@ export default function Product() {
         scroll={{
           x: "max-content",
         }}
-        rowSelection={rowSelection}
+        // rowSelection={rowSelection}
         rowKey={(record) => record.id}
         onChange={handleTableChange}
       />
