@@ -16,6 +16,8 @@ import { Loader2 } from "lucide-react";
 import { useCreateProductMutation } from "@/redux/api/productApi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { sanitizeParams } from "@/utils";
+import * as Yup from "yup";
 
 const items = [
   {
@@ -45,12 +47,20 @@ export default function CreateProduct() {
       full_description: "",
       delivery_policy: `<p>ঢাকা সিটি -হোম ডেলিভারী -৭০ টাকা ঢাকা </p><p>সিটি’র ভেতরে অর্থাৎ ঢাকা সিটি কর্পোরেশনের মধ্যে যে এলাকাগুলো রয়েছে সেই এলাকাগুলোতে সম্পূর্ণ ক্যাশ অন ডেলিভারি-তে ড্রেস ডেলিভারি করা হয়। </p><p>অর্থাৎ একজন ক্রেতা কোন প্রোডাক্ট অর্ডার করার পর প্রোডাক্টটি হাতে পেয়ে ডেলিভারিম্যানের কাছে প্রোডাক্টের মূল্য পরিশোধ করতে পারবেন। </p><p>ঢাকার বাইরে -সারা বাংলাদেশ- হোম ডেলিভারি অথবা কুরিয়ার ডেলিভেরী -১৫০ টাকা </p><p><span style="background-color: rgb(255 255 255 / var(--tw-bg-opacity));">ঢাকার বাইরের অর্ডারের ক্ষেত্রে যে এলাকাসমূহতে কন্ডিশনে কুরিয়ার যায় সেই ক্ষেত্রে শুধুমাত্র ডেলিভারি চার্জ এডভান্স করে অর্ডার করতে হয়। </span></p><p>পরবর্তীতে কুরিয়ার থেকে প্রোডাক্ট সংগ্রহের সময় শুধুমাত্র প্রোডাক্টের মূল্য পরিশোধ করে ক্রেতা তার প্রোডাক্টটি সংগ্রহ করতে পারবেন। </p><p>ঢাকার বাইরে হোম ডেলিভারির সুযোগ সাধারণত থানা সদরগুলোতে পাওয়া যায়। কুরিয়ারের ডেলিভারির সময় থেকে , হোম ডেলিভারিতে একটু বেশী সময় প্রয়োজন হয়, ৩-৫ দিন ঢাকার বাইরে হোম ডেলিভারির ক্ষেত্রে শুধুমাত্র ডেলিভারি চার্জ টা এডভান্স পেমেন্ট করতে হয় বাকী টাকা ক্যাশ অন ডেলিভারিতে অর্থাৎ প্রোডাক্ট রিসিভ করার সময় ডেলিভারিম্যানের কাছে টাকা দিয়ে প্রোডাক্ট রিসিভ করতে পারবেন।</p>`,
       youtube_video_link: "",
-      buy_price: 0,
-      cost_price: 0,
-      sell_price: 0,
+      buy_price: null,
+      cost_price: null,
+      sell_price: null,
       discount_type: null,
-      discount: 0,
+      discount: null,
     },
+    validationSchema: Yup.object({
+      category_id: Yup.string().required("Category is required"),
+      name: Yup.string().required("Product title is required"),
+      sku: Yup.string().required("Product sku is required"),
+      buy_price: Yup.number().required("Buy price is required"),
+      cost_price: Yup.number().required("Cost price is required"),
+      sell_price: Yup.number().required("Sell price is required"),
+    }),
     onSubmit: async (values) => {
       const payload = {
         ...values,
@@ -61,13 +71,16 @@ export default function CreateProduct() {
         total_stock: parseInt(values.total_stock),
       };
       try {
-        await createProduct(payload).unwrap();
+        await createProduct(sanitizeParams(payload)).unwrap();
         toast.success("Product created successfully");
         formik.resetForm();
         router.push("/super-admin/product");
       } catch (error) {
-        console.log(error);
-        toast.error(error.message || "Failed to create product");
+        toast.error(
+          error?.errorMessages && error.errorMessages.length > 0
+            ? error.errorMessages[0]?.message
+            : error.message || "Something went wrong!!!",
+        );
       }
     },
   });
@@ -120,6 +133,27 @@ export default function CreateProduct() {
               label="Product SKU"
               name="sku"
               placeholder="Enter product sku (it should be unique for each product)"
+              formik={formik}
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            <FormInput
+              label="Buy Price"
+              name="buy_price"
+              formik={formik}
+              required
+            />
+            <FormInput
+              label="Cost Price"
+              name="cost_price"
+              formik={formik}
+              required
+            />
+            <FormInput
+              label="Sell Price"
+              name="sell_price"
               formik={formik}
               required
             />
@@ -209,30 +243,16 @@ export default function CreateProduct() {
             ]}
           />
 
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-            <FormInput
-              label="Buy Price"
-              name="buy_price"
-              formik={formik}
-              required
-            />
-            <FormInput
-              label="Cost Price"
-              name="cost_price"
-              formik={formik}
-              required
-            />
-            <FormInput
-              label="Sell Price"
-              name="sell_price"
-              formik={formik}
-              required
-            />
-          </div>
+          <FormInput
+            label="Youtube Video Link"
+            name="youtube_video_link"
+            placeholder="Enter youtube video link"
+            formik={formik}
+          />
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div className="flex flex-col gap-1">
-              <Label htmlFor="category_id" className={"py-1"}>
+              <Label htmlFor="discount_type" className={"py-1"}>
                 Discount Type
               </Label>
               <Select
@@ -249,18 +269,10 @@ export default function CreateProduct() {
                   }
                 }}
               />
-              <FormikErrorBox formik={formik} name="category_id" />
             </div>
 
             <FormInput label="Discount" name="discount" formik={formik} />
           </div>
-
-          <FormInput
-            label="Youtube Video Link"
-            name="youtube_video_link"
-            placeholder="Enter youtube video link"
-            formik={formik}
-          />
 
           <div>
             <div className="mt-5 flex items-center gap-2">
