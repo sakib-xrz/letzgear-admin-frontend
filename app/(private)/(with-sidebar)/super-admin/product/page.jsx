@@ -1,9 +1,12 @@
 "use client";
 
 import TitleWithButton from "@/components/shared/title-with-button";
-import { useGetProductListQuery } from "@/redux/api/productApi";
+import {
+  useDeleteProductMutation,
+  useGetProductListQuery,
+} from "@/redux/api/productApi";
 import { generateQueryString, sanitizeParams } from "@/utils";
-import { Breadcrumb, Dropdown, Pagination, Table } from "antd";
+import { Breadcrumb, Button, Dropdown, Modal, Pagination, Table } from "antd";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -15,6 +18,7 @@ import { Image as ImageIcon } from "lucide-react";
 import ManageImageModal from "./_components/manage-image-modal";
 import { useGetCategoriesListQuery } from "@/redux/api/categoryApi";
 import ManageStockModal from "./_components/manage-stock-modal";
+import { toast } from "sonner";
 
 const breadcrumbItems = [
   {
@@ -46,6 +50,7 @@ export default function Product() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [currentProductId, setCurrentProductId] = useState(null);
   const [openManageImagesModal, setOpenManageImagesModal] = useState(false);
   const [openManageStockModal, setOpenManageStockModal] = useState(false);
@@ -54,6 +59,9 @@ export default function Product() {
 
   const { data: categoryData, isLoading: isCategoryListLoading } =
     useGetCategoriesListQuery();
+
+  const [deleteProduct, { isLoading: isDeleteLoading }] =
+    useDeleteProductMutation();
 
   const [params, setParams] = useState({
     id: searchParams.get("id") || null,
@@ -146,9 +154,14 @@ export default function Product() {
     {
       key: "4",
       label: (
-        <Link href={""} className="flex items-center gap-2 text-sm">
+        <p
+          onClick={() => {
+            setOpenDeleteModal(true);
+          }}
+          className="flex items-center gap-2 text-sm"
+        >
           <Trash2 size={16} /> Delete Product
-        </Link>
+        </p>
       ),
       danger: true,
     },
@@ -342,6 +355,16 @@ export default function Product() {
     }));
   };
 
+  const handleDelete = async () => {
+    try {
+      await deleteProduct(currentProductId).unwrap();
+      setOpenDeleteModal(false);
+      toast.success("Product deleted successfully");
+    } catch (error) {
+      toast.error(error.message || "Failed to delete product");
+    }
+  };
+
   return (
     <div className="space-y-5">
       <Breadcrumb items={breadcrumbItems} />
@@ -411,6 +434,38 @@ export default function Product() {
           setParams={setParams}
         />
       )}
+
+      <Modal
+        open={openDeleteModal}
+        title="Are you absolutely sure?"
+        icon={<></>}
+        closable={false}
+        footer={
+          <div className="flex items-center justify-end gap-2">
+            <Button
+              disabled={isDeleteLoading}
+              onClick={() => {
+                setOpenDeleteModal(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="primary"
+              danger
+              loading={isDeleteLoading}
+              onClick={handleDelete}
+            >
+              Delete
+            </Button>
+          </div>
+        }
+        centered
+        destroyOnClose
+      >
+        This action cannot be undone. This will permanently delete the product
+        from the database.
+      </Modal>
     </div>
   );
 }

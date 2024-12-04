@@ -1,4 +1,5 @@
 import Label from "@/components/shared/label";
+import useDesktop from "@/hooks/use-desktop";
 import { discountOptions } from "@/utils/constant";
 import { Button, Input, Select } from "antd";
 import { SlidersHorizontal, X } from "lucide-react";
@@ -12,6 +13,7 @@ export default function ProductSearchFilter({
   categoryData,
   data,
 }) {
+  const isDesktop = useDesktop();
   const [isFilterVisible, setIsFilterVisible] = useState(false);
   return (
     <div className="space-y-3">
@@ -38,7 +40,7 @@ export default function ProductSearchFilter({
               )
             }
           >
-            {isFilterVisible ? "Close" : "Filter"}
+            {isDesktop && (isFilterVisible ? "Close" : "Filter")}
           </Button>
 
           {isFilterVisible && (
