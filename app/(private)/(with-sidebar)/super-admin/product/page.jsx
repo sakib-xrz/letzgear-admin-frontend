@@ -135,7 +135,10 @@ export default function Product() {
     {
       key: "3",
       label: (
-        <Link href={""} className="flex items-center gap-2 text-sm">
+        <Link
+          href={`/super-admin/product/edit/${currentProductId}`}
+          className="flex items-center gap-2 text-sm"
+        >
           <PencilLine size={16} className="text-primary" /> Update Product
         </Link>
       ),
@@ -199,7 +202,9 @@ export default function Product() {
       render: (_text, record) => (
         <div className="space-y-2">
           <div className="flex items-center space-x-2">
-            <h3 className="font-medium max-lg:line-clamp-1">{record.name}</h3>
+            <h3 title={record.name} className="line-clamp-1 font-medium">
+              {record.name}
+            </h3>
             <small className="text-gray-500">({record.sku})</small>
           </div>
         </div>
@@ -213,7 +218,10 @@ export default function Product() {
       render: (_text, record) => (
         <div className="space-y-2">
           <div className="flex items-center space-x-2">
-            <h3 className="font-medium max-lg:line-clamp-1">
+            <h3
+              title={record.category.name}
+              className="font-medium max-lg:line-clamp-1"
+            >
               {record.category.name}
             </h3>
           </div>

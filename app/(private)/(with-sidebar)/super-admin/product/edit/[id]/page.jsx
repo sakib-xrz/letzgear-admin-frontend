@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import dynamic from "next/dynamic";
@@ -6,18 +7,20 @@ import "react-quill/dist/quill.snow.css";
 import FormInput from "@/components/form/form-input";
 import Label from "@/components/shared/label";
 import Title from "@/components/shared/title";
-import { Breadcrumb, Button, Cascader, Input, Select, Tabs } from "antd";
+import { Breadcrumb, Button, Input, Select, Tabs } from "antd";
 import { useFormik } from "formik";
 import Link from "next/link";
-import { useGetCategoriesQuery } from "@/redux/api/categoryApi";
-import { discountOptions, transformCategories } from "@/utils/constant";
-import FormikErrorBox from "@/components/shared/formik-error-box";
+import { discountOptions } from "@/utils/constant";
 import { Loader2 } from "lucide-react";
-import { useCreateProductMutation } from "@/redux/api/productApi";
+import {
+  useGetSingleProductQuery,
+  useUpdateProductMutation,
+} from "@/redux/api/productApi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { sanitizeParams } from "@/utils";
 import * as Yup from "yup";
+import { useEffect } from "react";
 
 const items = [
   {
@@ -27,25 +30,27 @@ const items = [
     title: <Link href="/super-admin/product">Product</Link>,
   },
   {
-    title: "Add Product",
+    title: "Edit Product",
   },
 ];
 
-export default function CreateProduct() {
+export default function CreateProduct({ params: { id } }) {
   const router = useRouter();
-  const { data, isLoading } = useGetCategoriesQuery();
 
-  const [createProduct, { isLoading: isCreateProductLoading }] =
-    useCreateProductMutation();
+  const { data, isLoading } = useGetSingleProductQuery(id);
+
+  const [updateProduct, { isLoading: isUpdateProductLoading }] =
+    useUpdateProductMutation();
+
+  const currentProduct = data?.data;
 
   const formik = useFormik({
     initialValues: {
-      category_id: null,
       name: "",
       sku: "",
       short_description: "",
       full_description: "",
-      delivery_policy: `<p>ঢাকা সিটি -হোম ডেলিভারী -৭০ টাকা ঢাকা </p><p>সিটি’র ভেতরে অর্থাৎ ঢাকা সিটি কর্পোরেশনের মধ্যে যে এলাকাগুলো রয়েছে সেই এলাকাগুলোতে সম্পূর্ণ ক্যাশ অন ডেলিভারি-তে ড্রেস ডেলিভারি করা হয়। </p><p>অর্থাৎ একজন ক্রেতা কোন প্রোডাক্ট অর্ডার করার পর প্রোডাক্টটি হাতে পেয়ে ডেলিভারিম্যানের কাছে প্রোডাক্টের মূল্য পরিশোধ করতে পারবেন। </p><p>ঢাকার বাইরে -সারা বাংলাদেশ- হোম ডেলিভারি অথবা কুরিয়ার ডেলিভেরী -১৫০ টাকা </p><p><span style="background-color: rgb(255 255 255 / var(--tw-bg-opacity));">ঢাকার বাইরের অর্ডারের ক্ষেত্রে যে এলাকাসমূহতে কন্ডিশনে কুরিয়ার যায় সেই ক্ষেত্রে শুধুমাত্র ডেলিভারি চার্জ এডভান্স করে অর্ডার করতে হয়। </span></p><p>পরবর্তীতে কুরিয়ার থেকে প্রোডাক্ট সংগ্রহের সময় শুধুমাত্র প্রোডাক্টের মূল্য পরিশোধ করে ক্রেতা তার প্রোডাক্টটি সংগ্রহ করতে পারবেন। </p><p>ঢাকার বাইরে হোম ডেলিভারির সুযোগ সাধারণত থানা সদরগুলোতে পাওয়া যায়। কুরিয়ারের ডেলিভারির সময় থেকে , হোম ডেলিভারিতে একটু বেশী সময় প্রয়োজন হয়, ৩-৫ দিন ঢাকার বাইরে হোম ডেলিভারির ক্ষেত্রে শুধুমাত্র ডেলিভারি চার্জ টা এডভান্স পেমেন্ট করতে হয় বাকী টাকা ক্যাশ অন ডেলিভারিতে অর্থাৎ প্রোডাক্ট রিসিভ করার সময় ডেলিভারিম্যানের কাছে টাকা দিয়ে প্রোডাক্ট রিসিভ করতে পারবেন।</p>`,
+      delivery_policy: "",
       youtube_video_link: "",
       buy_price: null,
       cost_price: null,
@@ -54,7 +59,6 @@ export default function CreateProduct() {
       discount: null,
     },
     validationSchema: Yup.object({
-      category_id: Yup.string().required("Category is required"),
       name: Yup.string().required("Product title is required"),
       sku: Yup.string().required("Product sku is required"),
       buy_price: Yup.number()
@@ -77,9 +81,8 @@ export default function CreateProduct() {
         total_stock: parseInt(values.total_stock),
       };
       try {
-        await createProduct(sanitizeParams(payload)).unwrap();
-        toast.success("Product created successfully");
-        formik.resetForm();
+        await updateProduct({ id, data: sanitizeParams(payload) }).unwrap();
+        toast.success("Product update successfully");
         router.push("/super-admin/product");
       } catch (error) {
         toast.error(
@@ -91,6 +94,22 @@ export default function CreateProduct() {
     },
   });
 
+  useEffect(() => {
+    formik.setValues({
+      name: currentProduct?.name,
+      sku: currentProduct?.sku,
+      short_description: currentProduct?.short_description,
+      full_description: currentProduct?.full_description,
+      delivery_policy: currentProduct?.delivery_policy,
+      youtube_video_link: currentProduct?.youtube_video_link,
+      buy_price: currentProduct?.buy_price,
+      cost_price: currentProduct?.cost_price,
+      sell_price: currentProduct?.sell_price,
+      discount_type: currentProduct?.discount_type,
+      discount: currentProduct?.discount,
+    });
+  }, [data]);
+
   if (isLoading) {
     return (
       <div className="flex h-[calc(100svh-130px)] items-center justify-center">
@@ -99,34 +118,14 @@ export default function CreateProduct() {
     );
   }
 
-  const categoryOptions = transformCategories(data?.data);
-
   return (
     <div className="space-y-5">
       <Breadcrumb items={items} />
 
       <div className="space-y-3 sm:rounded-md sm:bg-white sm:p-6 sm:shadow lg:p-8">
-        <Title title={"Create New Product"} />
+        <Title title={"Update Product"} />
 
         <form onSubmit={formik.handleSubmit} className="space-y-2">
-          <div className="flex flex-col gap-1">
-            <Label htmlFor="category_id" className={"py-1"} required>
-              Category
-            </Label>
-            <Cascader
-              options={categoryOptions}
-              onChange={(value) => {
-                formik.setFieldValue(
-                  "category_id",
-                  value?.length ? value[value?.length - 1] : null,
-                );
-              }}
-              changeOnSelect
-              className="!w-full"
-            />
-            <FormikErrorBox formik={formik} name="category_id" />
-          </div>
-
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <FormInput
               label="Title"
@@ -268,12 +267,11 @@ export default function CreateProduct() {
                 placeholder="Select Discount Type"
                 onChange={(value) => {
                   {
-                    console.log(value);
-
                     formik.setFieldValue("discount_type", value);
                     formik.setFieldValue("discount", 0);
                   }
                 }}
+                value={formik.values.discount_type}
               />
             </div>
 
@@ -282,16 +280,16 @@ export default function CreateProduct() {
 
           <div>
             <div className="mt-5 flex items-center gap-2">
-              <Button className="w-full" disabled={isCreateProductLoading}>
+              <Button className="w-full" disabled={isUpdateProductLoading}>
                 <Link href="/super-admin/product">Cancel</Link>
               </Button>
               <Button
                 type="primary"
                 htmlType="submit"
                 className="w-full"
-                loading={isCreateProductLoading}
+                loading={isUpdateProductLoading}
               >
-                Create Product
+                Update Product
               </Button>
             </div>
           </div>
