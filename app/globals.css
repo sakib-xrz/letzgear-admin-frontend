@@ -2,11 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
-.ant-dropdown-menu-item-selected {
+.ant-dropdown-menu .ant-dropdown-menu-item.ant-dropdown-menu-item-selected {
   color: #ffffff !important;
 }
 
-.ant-menu-item-selected {
+.ant-menu .ant-menu-item.ant-menu-item-selected {
+  color: #ffffff !important;
+}
+
+:where(.ant-dropdown-menu-item-selected) {
+  color: #ffffff !important;
+}
+
+:where(.ant-menu-item-selected) {
   color: #ffffff !important;
 }
 

@@ -62,11 +62,11 @@ function getItem(label, key, icon, children) {
 export const getSidebarItems = (role) => {
   const SUPER_ADMIN = [
     getItem("Dashboard", "/super-admin/dashboard", <LayoutDashboard />),
-    getItem("Manage Categories", "", <LayoutList />, [
+    getItem("Manage Categories", "category", <LayoutList />, [
       getItem("Category List", "/super-admin/category"),
       getItem("Add Category", "/super-admin/category/add"),
     ]),
-    getItem("Manage Products", "/super-admin/product", <Box />, [
+    getItem("Manage Products", "product", <Box />, [
       getItem("Product Size", "/super-admin/product/size"),
       getItem("Product List", "/super-admin/product"),
       getItem("Add Product", "/super-admin/product/add"),
@@ -109,4 +109,30 @@ export const discountOptions = [
     value: "FLAT",
     label: "Flat",
   },
+];
+
+export const userStatusOptions = [
+  {
+    key: "1",
+    value: "ACTIVE",
+    label: "Active",
+  },
+  {
+    key: "2",
+    value: "INACTIVE",
+    label: "Inactive",
+  },
+];
+
+export const userRoleOptions = [
+  {
+    key: "1",
+    value: "CUSTOMER",
+    label: "Customer",
+  },
+  // {
+  //   key: "2",
+  //   value: "ADMIN",
+  //   label: "Admin",
+  // },
 ];
