@@ -5,6 +5,7 @@ import {
   UserRound,
   LayoutList,
   Box,
+  UsersRoundIcon,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -61,15 +62,16 @@ function getItem(label, key, icon, children) {
 export const getSidebarItems = (role) => {
   const SUPER_ADMIN = [
     getItem("Dashboard", "/super-admin/dashboard", <LayoutDashboard />),
-    getItem("Manage Category", "", <LayoutList />, [
+    getItem("Manage Categories", "", <LayoutList />, [
       getItem("Category List", "/super-admin/category"),
       getItem("Add Category", "/super-admin/category/add"),
     ]),
-    getItem("Manage Product", "/super-admin/product", <Box />, [
+    getItem("Manage Products", "/super-admin/product", <Box />, [
       getItem("Product Size", "/super-admin/product/size"),
       getItem("Product List", "/super-admin/product"),
       getItem("Add Product", "/super-admin/product/add"),
     ]),
+    getItem("Manage Users", "/super-admin/user", <UsersRoundIcon />),
   ];
 
   switch (role) {
