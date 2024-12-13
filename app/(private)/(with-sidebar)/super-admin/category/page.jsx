@@ -127,10 +127,11 @@ export default function Category() {
     try {
       await deleteCategory(id).unwrap();
       setOpenDeleteModal(false);
-      setId(null);
       toast.success("Category deleted successfully");
     } catch (error) {
       toast.error(error.message || "Failed to delete category");
+    } finally {
+      setId(null);
     }
   };
 
