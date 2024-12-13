@@ -1,15 +1,29 @@
 "use client";
 
 import TitleWithButton from "@/components/shared/title-with-button";
-import { useGetAllUsersQuery } from "@/redux/api/userApi";
+import {
+  useDeleteUserMutation,
+  useGetAllUsersQuery,
+  useUpdateUserStatusMutation,
+} from "@/redux/api/userApi";
 import { generateQueryString, sanitizeParams } from "@/utils";
-import { Breadcrumb, Image, Pagination, Select, Table, Tag } from "antd";
+import {
+  Breadcrumb,
+  Button,
+  Image,
+  Modal,
+  Pagination,
+  Select,
+  Table,
+  Tag,
+} from "antd";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import UserSearchFilter from "./_components/user-search-filter";
 import { userStatusOptions } from "@/utils/constant";
+import { toast } from "sonner";
 
 const breadcrumbItems = [
   {
@@ -24,6 +38,11 @@ export default function User() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const [updateUserStatus, { isLoading: isUpdateStatusLoading }] =
+    useUpdateUserStatusMutation();
+
+  const [deleteUser, { isLoading: isDeleteLoading }] = useDeleteUserMutation();
+
   const [searchKey, setSearchKey] = useState(searchParams.get("search") || "");
   const [params, setParams] = useState({
     search: searchParams.get("search") || "",
@@ -34,6 +53,8 @@ export default function User() {
     page: Number(searchParams.get("page")) || 1,
     limit: Number(searchParams.get("limit")) || 10,
   });
+  const [id, setId] = useState(null);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const debouncedSearch = useDebouncedCallback((value) => {
     setParams((prev) => ({ ...prev, search: value, page: 1 }));
@@ -63,9 +84,7 @@ export default function User() {
     setParams((prev) => ({ ...prev, page }));
   };
 
-  const { data, isLoading, isFetching } = useGetAllUsersQuery(
-    sanitizeParams(params),
-  );
+  const { data, isLoading } = useGetAllUsersQuery(sanitizeParams(params));
 
   const dataSource = data?.data || [];
 
@@ -104,7 +123,6 @@ export default function User() {
         </div>
       ),
     },
-
     {
       title: "Email",
       dataIndex: "email",
@@ -141,17 +159,31 @@ export default function User() {
         <div className="flex justify-center">
           <Select
             defaultValue={record.status}
-            style={{ width: 90 }}
+            style={{ width: 100 }}
             size="small"
             options={userStatusOptions}
-            loading={true}
-            disabled={true}
+            loading={id === record.id && isUpdateStatusLoading}
+            disabled={id === record.id && isUpdateStatusLoading}
+            onChange={async (value) => {
+              setId(record.id);
+              try {
+                await updateUserStatus({
+                  id: record.id,
+                  data: { status: value },
+                }).unwrap();
+                toast.success("User status updated successfully");
+              } catch (error) {
+                toast.error(error?.message || "Failed to update user status");
+              } finally {
+                setId(null);
+              }
+            }}
           />
         </div>
       ),
     },
     {
-      title: <div className="text-center">Status</div>,
+      title: <div className="text-center">Action</div>,
       key: "action",
       key: "action",
       render: (_text, record) => (
@@ -179,6 +211,18 @@ export default function User() {
     }));
   };
 
+  const handleDelete = async () => {
+    try {
+      await deleteUser(id).unwrap();
+      setOpenDeleteModal(false);
+      toast.success("User deleted successfully");
+    } catch (error) {
+      toast.error(error.message || "Failed to delete user");
+    } finally {
+      setId(null);
+    }
+  };
+
   return (
     <div className="space-y-5">
       <Breadcrumb items={breadcrumbItems} />
@@ -197,7 +241,7 @@ export default function User() {
         bordered
         dataSource={dataSource}
         columns={columns}
-        loading={isLoading || isFetching}
+        loading={isLoading}
         pagination={false}
         scroll={{
           x: "max-content",
@@ -221,6 +265,39 @@ export default function User() {
           responsive={true}
         />
       )}
+
+      <Modal
+        open={openDeleteModal}
+        title="Are you absolutely sure?"
+        icon={<></>}
+        closable={false}
+        footer={
+          <div className="flex items-center justify-end gap-2">
+            <Button
+              disabled={isDeleteLoading}
+              onClick={() => {
+                setOpenDeleteModal(false);
+                setId(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="primary"
+              danger
+              loading={isDeleteLoading}
+              onClick={handleDelete}
+            >
+              Delete
+            </Button>
+          </div>
+        }
+        centered
+        destroyOnClose
+      >
+        This action cannot be undone. This user will be permanently deleted from
+        our servers.
+      </Modal>
     </div>
   );
 }

@@ -117,7 +117,7 @@ export default function Product() {
   };
 
   const { id, ...restParams } = params;
-  const { data, isLoading, isFetching } = useGetProductListQuery(
+  const { data, isLoading } = useGetProductListQuery(
     sanitizeParams(restParams),
   );
 
@@ -419,7 +419,7 @@ export default function Product() {
         bordered
         dataSource={dataSource}
         columns={columns}
-        loading={isLoading || isCategoryListLoading || isFetching}
+        loading={isLoading || isCategoryListLoading}
         pagination={false}
         scroll={{
           x: "max-content",

@@ -11,7 +11,26 @@ export const userApi = baseApi.injectEndpoints({
       }),
       providesTags: [tagTypes.user],
     }),
+    updateUserStatus: build.mutation({
+      query: ({ id, data }) => ({
+        url: `/users/${id}/status`,
+        method: "PATCH",
+        data,
+      }),
+      invalidatesTags: [tagTypes.user],
+    }),
+    deleteUser: build.mutation({
+      query: (id) => ({
+        url: `/users/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [tagTypes.user],
+    }),
   }),
 });
 
-export const { useGetAllUsersQuery } = userApi;
+export const {
+  useGetAllUsersQuery,
+  useUpdateUserStatusMutation,
+  useDeleteUserMutation,
+} = userApi;
