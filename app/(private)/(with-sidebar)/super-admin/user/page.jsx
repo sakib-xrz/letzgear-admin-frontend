@@ -24,6 +24,7 @@ import { useDebouncedCallback } from "use-debounce";
 import UserSearchFilter from "./_components/user-search-filter";
 import { userStatusOptions } from "@/utils/constant";
 import { toast } from "sonner";
+import CreateUser from "./_components/create-user";
 
 const breadcrumbItems = [
   {
@@ -55,6 +56,7 @@ export default function User() {
   });
   const [id, setId] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
 
   const debouncedSearch = useDebouncedCallback((value) => {
     setParams((prev) => ({ ...prev, search: value, page: 1 }));
@@ -227,7 +229,11 @@ export default function User() {
     <div className="space-y-5">
       <Breadcrumb items={breadcrumbItems} />
       <div className="space-y-5">
-        <TitleWithButton title="Users" buttonText="Create User" />
+        <TitleWithButton
+          title="Users"
+          buttonText="Create User"
+          onClick={() => setOpenCreateModal(true)}
+        />
       </div>
       <UserSearchFilter
         params={params}
@@ -298,6 +304,10 @@ export default function User() {
         This action cannot be undone. This user will be permanently deleted from
         our servers.
       </Modal>
+
+      {openCreateModal && (
+        <CreateUser open={openCreateModal} setOpen={setOpenCreateModal} />
+      )}
     </div>
   );
 }

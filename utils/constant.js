@@ -125,14 +125,14 @@ export const userStatusOptions = [
 ];
 
 export const userRoleOptions = [
-  {
-    key: "1",
-    value: "CUSTOMER",
-    label: "Customer",
-  },
   // {
-  //   key: "2",
+  //   key: "1",
   //   value: "ADMIN",
   //   label: "Admin",
   // },
+  {
+    key: "CUSTOMER",
+    value: "CUSTOMER",
+    label: "Customer",
+  },
 ];
