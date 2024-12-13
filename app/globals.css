@@ -138,6 +138,10 @@
   background-color: #56575c;
 }
 
+.user-image .ant-image-mask {
+  border-radius: 9999px !important;
+}
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
