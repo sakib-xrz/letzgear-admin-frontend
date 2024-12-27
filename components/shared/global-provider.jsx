@@ -22,7 +22,7 @@ export default function GlobalProvider({ children }) {
       } catch (error) {
         console.error("Error fetching FCM token: ", error);
       } finally {
-        setLoading(false); // Ensure loading state is updated regardless of success or failure
+        setLoading(false);
       }
     };
 
