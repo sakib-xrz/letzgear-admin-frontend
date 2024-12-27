@@ -97,24 +97,23 @@ const useFcmToken = () => {
         const link = payload.fcmOptions?.link || payload.data?.link;
 
         if (link) {
-          toast.info(
-            `${payload.notification?.title}: ${payload.notification?.body}`,
-            {
-              action: {
-                label: "Visit",
-                onClick: () => {
-                  const link = payload.fcmOptions?.link || payload.data?.link;
-                  if (link) {
-                    router.push(link);
-                  }
-                },
+          toast.message(payload.notification?.title, {
+            description: payload.notification?.body,
+            position: "bottom-right",
+            action: {
+              label: "Visit",
+              onClick: () => {
+                if (link) {
+                  router.push(link);
+                }
               },
             },
-          );
+          });
         } else {
-          toast.info(
-            `${payload.notification?.title}: ${payload.notification?.body}`,
-          );
+          toast.message(payload.notification?.title, {
+            description: payload.notification?.body,
+            position: "bottom-right",
+          });
         }
 
         const n = new Notification(
