@@ -9,9 +9,7 @@ import { Provider } from "react-redux";
 import { Toaster } from "sonner";
 
 export default function GlobalProvider({ children }) {
-  const { token } = useFcmToken();
-
-  console.log("FCM Token: ", token);
+  useFcmToken();
 
   return (
     <Provider store={store}>

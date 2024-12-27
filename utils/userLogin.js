@@ -34,6 +34,7 @@ const userLogin = async (payload) => {
           ? existingRedirectURL
           : `/${role === "SUPER_ADMIN" ? "super-admin" : role.toLowerCase()}/dashboard`,
       });
+
       window.location.reload();
     }
 

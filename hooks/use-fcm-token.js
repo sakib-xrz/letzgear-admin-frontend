@@ -86,14 +86,14 @@ const useFcmToken = () => {
     const setupListener = async () => {
       if (!token) return;
 
-      console.log(`onMessage registered with token ${token}`);
+      // console.log(`onMessage registered with token ${token}`);
       const m = await messaging();
       if (!m) return;
 
       const unsubscribe = onMessage(m, (payload) => {
         if (Notification.permission !== "granted") return;
 
-        console.log("Foreground push notification received:", payload);
+        // console.log("Foreground push notification received:", payload);
         const link = payload.fcmOptions?.link || payload.data?.link;
 
         if (link) {
