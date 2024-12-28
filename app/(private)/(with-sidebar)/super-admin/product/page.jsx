@@ -234,7 +234,7 @@ export default function Product() {
           </div>
         </div>
       ),
-      width: 350,
+      width: 450,
       sorter: true,
     },
     {
