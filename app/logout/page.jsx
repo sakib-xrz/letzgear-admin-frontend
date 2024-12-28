@@ -3,8 +3,6 @@
 
 import removeAccessToken from "@/actions/removeAccessToken";
 import { logout, removeUserInfo } from "@/utils/auth";
-import { FCM_TOKEN_KEY } from "@/utils/constant";
-import { removeFromLocalStorage } from "@/utils/localStorage";
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 
@@ -14,7 +12,6 @@ export default function Logout() {
       await logout();
       removeUserInfo();
       await removeAccessToken();
-      removeFromLocalStorage(FCM_TOKEN_KEY);
       window.location.href = "/login";
     };
 
