@@ -10,13 +10,10 @@ import FormInput from "@/components/form/form-input";
 import userLogin from "@/utils/userLogin";
 import { useState } from "react";
 import { toast } from "sonner";
-import useFcmToken from "@/hooks/use-fcm-token";
-import { setToLocalStorage } from "@/utils/localStorage";
-import { FCM_TOKEN_KEY } from "@/utils/constant";
+import { useFcmToken } from "@/hooks/use-fcm-token";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
-  const { token: fcmToken } = useFcmToken();
 
   const loginSchema = Yup.object({
     email: Yup.string()
@@ -36,7 +33,6 @@ export default function Login() {
 
       try {
         await userLogin(values);
-        setToLocalStorage(FCM_TOKEN_KEY, fcmToken);
         toast.success("Logged in successfully");
       } catch (error) {
         formik.resetForm();

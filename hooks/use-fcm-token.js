@@ -1,155 +1,51 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+import { useState, useEffect } from "react";
+import { messaging } from "../fireabse";
+import { getToken } from "firebase/messaging";
+import { setToLocalStorage } from "@/utils/localStorage";
+import { FCM_TOKEN_KEY } from "@/utils/constant";
 
-import { useEffect, useRef, useState } from "react";
-// import { getToken, onMessage, Unsubscribe } from "firebase/messaging";
-import { onMessage } from "firebase/messaging";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { fetchToken, messaging } from "@/fireabse";
-
-async function getNotificationPermissionAndToken() {
-  if (!("Notification" in window)) {
-    console.info("This browser does not support desktop notification");
-    return null;
-  }
-
-  if (Notification.permission === "granted") {
-    return await fetchToken();
-  }
-
-  if (Notification.permission !== "denied") {
-    const permission = await Notification.requestPermission();
-    if (permission === "granted") {
-      return await fetchToken();
-    }
-  }
-
-  console.log("Notification permission not granted.");
-  return null;
-}
-
-const useFcmToken = () => {
-  const router = useRouter();
-  const [_notificationPermissionStatus, setNotificationPermissionStatus] =
-    useState(null);
-  const [token, setToken] = useState(null);
-  const retryLoadToken = useRef(0);
-  const isLoading = useRef(false);
-
-  const loadToken = async () => {
-    if (isLoading.current) return;
-
-    isLoading.current = true;
-    const token = await getNotificationPermissionAndToken();
-
-    if (Notification.permission === "denied") {
-      setNotificationPermissionStatus("denied");
-      console.info(
-        "%cPush Notifications issue - permission denied",
-        "color: green; background: #c7c7c7; padding: 8px; font-size: 20px",
-      );
-      isLoading.current = false;
-      return;
-    }
-
-    if (!token) {
-      if (retryLoadToken.current >= 3) {
-        alert("Unable to load token, refresh the browser");
-        console.info(
-          "%cPush Notifications issue - unable to load token after 3 retries",
-          "color: green; background: #c7c7c7; padding: 8px; font-size: 20px",
-        );
-        isLoading.current = false;
-        return;
-      }
-
-      retryLoadToken.current += 1;
-      console.error("An error occurred while retrieving token. Retrying...");
-      isLoading.current = false;
-      await loadToken();
-      return;
-    }
-
-    setNotificationPermissionStatus(Notification.permission);
-    setToken(token);
-    isLoading.current = false;
-  };
+export const useFcmToken = () => {
+  const [fcmToken, setFcmToken] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if ("Notification" in window) {
-      loadToken();
-    }
-  }, []);
+    const requestPermission = async () => {
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+          console.log("Notification permission granted.");
 
-  useEffect(() => {
-    const setupListener = async () => {
-      if (!token) return;
-
-      // console.log(`onMessage registered with token ${token}`);
-      const m = await messaging();
-      if (!m) return;
-
-      const unsubscribe = onMessage(m, (payload) => {
-        if (Notification.permission !== "granted") return;
-
-        // console.log("Foreground push notification received:", payload);
-        const link = payload.fcmOptions?.link || payload.data?.link;
-
-        if (link) {
-          toast.message(payload.notification?.title, {
-            description: payload.notification?.body,
-            position: "bottom-right",
-            action: {
-              label: "Visit",
-              onClick: () => {
-                if (link) {
-                  router.push(link);
-                }
-              },
-            },
+          // Register service worker and get the FCM token
+          const registration = await navigator.serviceWorker.register(
+            "/firebase-messaging-sw.js",
+          );
+          const token = await getToken(messaging, {
+            serviceWorkerRegistration: registration,
           });
-        } else {
-          toast.message(payload.notification?.title, {
-            description: payload.notification?.body,
-            position: "bottom-right",
-          });
-        }
 
-        const n = new Notification(
-          payload.notification?.title || "New message",
-          {
-            body: payload.notification?.body || "This is a new message",
-            data: link ? { url: link } : undefined,
-          },
-        );
+          if (token) {
+            setFcmToken(token);
+            console.log("FCM Token:", token);
 
-        n.onclick = (event) => {
-          event.preventDefault();
-          const link = event.target?.data?.url;
-          if (link) {
-            router.push(link);
+            // Store the token in local storage
+            setToLocalStorage(FCM_TOKEN_KEY, token);
+            console.log("FCM token stored in local storage.");
           } else {
-            console.log("No link found in the notification payload");
+            console.error("Failed to get FCM token.");
+            setError("Failed to get FCM token.");
           }
-        };
-      });
-
-      return unsubscribe;
+        } else {
+          console.error("Notification permission denied.");
+          setError("Permission denied");
+        }
+      } catch (err) {
+        console.error("Error retrieving FCM token:", err);
+        setError(err.message);
+      }
     };
 
-    let unsubscribe = null;
+    requestPermission();
+  }, []);
 
-    setupListener().then((unsub) => {
-      if (unsub) {
-        unsubscribe = unsub;
-      }
-    });
-
-    return () => unsubscribe?.();
-  }, [token, router, toast]);
-
-  return { token };
+  return { fcmToken, error };
 };
-
-export default useFcmToken;
