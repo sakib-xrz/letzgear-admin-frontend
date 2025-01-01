@@ -1,7 +1,14 @@
 "use client";
 
-import { Avatar, Drawer, Dropdown, Skeleton, Menu as AntMenu } from "antd";
-import { Menu, X } from "lucide-react";
+import {
+  Avatar,
+  Drawer,
+  Dropdown,
+  Skeleton,
+  Menu as AntMenu,
+  Badge,
+} from "antd";
+import { Bell, Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -57,6 +64,13 @@ export default function Navbar() {
           {/* For small screens */}
           <div className="hidden items-center gap-3 max-md:flex">
             {/* User profile dropdown for small screens */}
+            <div className="flex items-center gap-5">
+              <Badge count={1} dot={true}>
+                <Bell className="cursor-pointer" />
+              </Badge>
+              <UserProfile user={user} isLoading={isLoading} />
+            </div>
+
             <div>
               {isLoading ? (
                 <Skeleton.Avatar active size="small" />
@@ -107,7 +121,12 @@ export default function Navbar() {
           </div>
 
           {/* For large screens */}
-          <UserProfile user={user} isLoading={isLoading} />
+          <div className="flex items-center gap-5 max-md:hidden">
+            <Badge count={1} dot={true}>
+              <Bell className="cursor-pointer" />
+            </Badge>
+            <UserProfile user={user} isLoading={isLoading} />
+          </div>
         </div>
       </div>
     </div>
