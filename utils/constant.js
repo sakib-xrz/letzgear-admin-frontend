@@ -142,3 +142,49 @@ export const userRoleOptions = [
     label: "Customer",
   },
 ];
+
+export const paymentStatusOptions = [
+  {
+    key: "1",
+    value: "PENDING",
+    label: "Pending",
+  },
+  {
+    key: "2",
+    value: "SUCCESS",
+    label: "Success",
+  },
+  {
+    key: "3",
+    value: "FAILED",
+    label: "Failed",
+  },
+];
+
+export const orderStatusOptions = [
+  {
+    key: "1",
+    value: "PENDING",
+    label: "Pending",
+  },
+  {
+    key: "2",
+    value: "CONFIRMED",
+    label: "Confirmed",
+  },
+  {
+    key: "3",
+    value: "SHIPPED",
+    label: "Shipped",
+  },
+  {
+    key: "4",
+    value: "DELIVERED",
+    label: "Delivered",
+  },
+  {
+    key: "5",
+    value: "CANCELLED",
+    label: "Cancelled",
+  },
+];
