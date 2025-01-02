@@ -52,7 +52,13 @@ export default function Sidebar({ children }) {
               }}
             >
               <Container
-                className={pathname === "/super-admin/product" && "max-w-full"}
+                className={
+                  (pathname === "/super-admin/user" ||
+                    pathname === "/super-admin/category" ||
+                    pathname === "/super-admin/product" ||
+                    pathname === "/super-admin/order") &&
+                  "max-w-full"
+                }
               >
                 {children}
               </Container>

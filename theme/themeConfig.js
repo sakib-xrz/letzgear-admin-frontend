@@ -31,7 +31,7 @@ const themeConfig = {
     colorError: "#e5000c",
     colorTextBase: "#18181b",
     fontSize: 16,
-    borderRadius: 4,
+    borderRadius: 6,
     wireframe: true,
 
     algorithm: true,

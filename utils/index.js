@@ -58,3 +58,14 @@ export function transformCategories(data) {
     return transformedCategory;
   });
 }
+
+export const formatText = (text) => {
+  if (text) {
+    const textLowerCase = text.split("_").join(" ").toLowerCase();
+    const formattedText =
+      textLowerCase.charAt(0).toUpperCase() + textLowerCase.slice(1);
+    return formattedText;
+  } else {
+    return "";
+  }
+};

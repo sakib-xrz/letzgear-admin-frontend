@@ -2,14 +2,16 @@
 
 import TitleWithButton from "@/components/shared/title-with-button";
 import { useGetOrderListQuery } from "@/redux/api/orderApi";
-import { generateQueryString, sanitizeParams } from "@/utils";
-import { Breadcrumb, Pagination } from "antd";
+import { formatText, generateQueryString, sanitizeParams } from "@/utils";
+import { Breadcrumb, Pagination, Select } from "antd";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import OderSearchFilter from "./_components/order-search-filter";
 import { CreditCard, House, Mail, Phone } from "lucide-react";
+import Label from "@/components/shared/label";
+import { orderStatusOptions, paymentStatusOptions } from "@/utils/constant";
 
 const items = [
   {
@@ -89,62 +91,110 @@ export default function Oder() {
       />
       {orders?.map((order) => (
         <div key={order.id} className="rounded-md bg-white p-5 shadow">
-          <div className="grid grid-cols-4">
-            <div className="space-y-1">
+          <div className="grid grid-cols-4 gap-5">
+            <div className="space-y-2">
               <div>
-                <p className="text-paragraph mb-1 text-xs">Order Info</p>
+                <p className="text-xs text-paragraph">Order Info</p>
                 <h3 className="text-lg font-semibold text-primary">
                   #{order?.order_id}
                 </h3>
               </div>
-              <h6 className="flex items-center gap-1 text-sm font-medium text-primary">
-                <CreditCard size={16} className="text-paragraph" />
-                <span className="first-letter:uppercase">
-                  {order?.payment?.status.toLowerCase()}
-                </span>{" "}
-                {order?.payment?.payment_method === "CASH_ON_DELIVERY"
-                  ? "(COD)"
-                  : order?.payment?.payment_method}
-              </h6>
-              <h6 className="flex items-center gap-1 text-sm font-medium text-primary">
-                <House size={16} className="text-paragraph" />
-                {order?.is_inside_dhaka === true
-                  ? "Inside Dhaka"
-                  : "Outside Dhaka"}
-              </h6>
-            </div>
-
-            <div className="space-y-1">
-              <div>
-                <p className="text-paragraph mb-1 text-xs">Customer Info</p>
-                <h6 className="text-lg font-semibold text-primary">
-                  {order?.customer_name}
-                </h6>
+              <div className="flex flex-col space-y-1">
+                <Label
+                  htmlFor="payment_status"
+                  className={"text-xs text-paragraph"}
+                >
+                  Payment Status
+                </Label>
+                <Select
+                  size="small"
+                  className="w-40"
+                  name="payment_status"
+                  options={paymentStatusOptions}
+                  value={paymentStatusOptions.find(
+                    (item) => item.value === order?.payment?.status,
+                  )}
+                  placeholder="Select Payment Status"
+                  onChange={(value) => {
+                    {
+                      console.log(value);
+                    }
+                  }}
+                />
               </div>
-              <Link
-                href={`mailto:${order?.email}`}
-                target="_blank"
-                className="flex w-fit items-center gap-1 text-sm font-medium text-primary hover:underline"
-              >
-                <Mail size={16} className="text-paragraph" />
-                {order?.email}
-              </Link>
-              <Link
-                href={`tel:${order?.phone}`}
-                target="_blank"
-                className="flex w-fit items-center gap-1 text-sm font-medium text-primary hover:underline"
-              >
-                <Phone size={16} className="text-paragraph" />
-                {order?.phone}
-              </Link>
             </div>
 
-            <div className="space-y-1">
+            <div>
+              <p className="text-xs text-paragraph">Customer Info</p>
+              <h6 className="text-lg font-semibold text-primary">
+                {order?.customer_name}
+              </h6>
+
+              <div className="space-y-1">
+                <Link
+                  href={`mailto:${order?.email}`}
+                  target="_blank"
+                  className="flex w-fit items-center gap-1 text-sm font-medium text-primary hover:underline"
+                >
+                  <Mail size={16} className="text-paragraph" />
+                  {order?.email}
+                </Link>
+
+                <Link
+                  href={`tel:${order?.phone}`}
+                  target="_blank"
+                  className="flex w-fit items-center gap-1 text-sm font-medium text-primary hover:underline"
+                >
+                  <Phone size={16} className="text-paragraph" />
+                  {order?.phone}
+                </Link>
+              </div>
+            </div>
+
+            <div className="space-y-2">
               <div>
-                <p className="text-paragraph mb-1 text-xs">Delivery Address</p>
-                <h6 className="flex items-center gap-1 text-sm font-medium text-primary">
+                <p className="text-xs text-paragraph">Delivery Address</p>
+                <h6 className="line-clamp-2 w-10/12 text-sm font-medium text-primary">
                   {order?.address_line}
                 </h6>
+              </div>
+              <div>
+                <p className="text-xs text-paragraph">Payment Method</p>
+                <h6 className="line-clamp-2 text-sm font-medium text-primary">
+                  {formatText(order?.payment?.payment_method)}
+                </h6>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div>
+                <p className="text-xs text-paragraph">Price Info</p>
+                <h3 className="text-lg font-semibold text-primary">
+                  {order?.grand_total} Tk.
+                </h3>
+              </div>
+              <div className="flex flex-col space-y-1">
+                <Label
+                  htmlFor="Order Status"
+                  className={"text-xs text-paragraph"}
+                >
+                  Order Status
+                </Label>
+                <Select
+                  size="small"
+                  name="Order Status"
+                  className="w-40"
+                  options={orderStatusOptions}
+                  value={orderStatusOptions.find(
+                    (item) => item.value === order?.status,
+                  )}
+                  placeholder="Select Order Status"
+                  onChange={(value) => {
+                    {
+                      console.log(value);
+                    }
+                  }}
+                />
               </div>
             </div>
           </div>
