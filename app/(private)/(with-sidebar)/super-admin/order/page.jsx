@@ -3,13 +3,13 @@
 import TitleWithButton from "@/components/shared/title-with-button";
 import { useGetOrderListQuery } from "@/redux/api/orderApi";
 import { formatText, generateQueryString, sanitizeParams } from "@/utils";
-import { Breadcrumb, Pagination, Select } from "antd";
+import { Breadcrumb, Button, Pagination, Select, Table } from "antd";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import OderSearchFilter from "./_components/order-search-filter";
-import { CreditCard, House, Mail, Phone } from "lucide-react";
+import { CreditCard, Eye, House, Mail, Phone } from "lucide-react";
 import Label from "@/components/shared/label";
 import { orderStatusOptions, paymentStatusOptions } from "@/utils/constant";
 
@@ -68,9 +68,170 @@ export default function Oder() {
 
   const { data, isLoading } = useGetOrderListQuery(sanitizeParams(params));
 
-  if (isLoading) return <div>Loading...</div>;
+  const dataSource = data?.data || [];
 
-  const orders = data.data;
+  const columns = [
+    {
+      title: "Order Id",
+      key: "order_id",
+      render: (_text, record) => (
+        <h3 className="font-semibold text-primary">#{record.order_id}</h3>
+      ),
+    },
+    {
+      title: "Customer",
+      key: "customer",
+      render: (_text, record) => (
+        <h6 className="text-sm font-medium text-primary">
+          {record.customer_name}
+        </h6>
+      ),
+    },
+    {
+      title: "Contact Info",
+      key: "contact_info",
+      render: (_text, record) => (
+        <div className="space-y-1">
+          <Link
+            href={`tel:${record.phone}`}
+            target="_blank"
+            className="block w-fit text-sm font-medium text-primary hover:underline"
+          >
+            {record.phone}
+          </Link>
+          <Link
+            href={`mailto:${record.email}`}
+            target="_blank"
+            className="block w-fit truncate text-sm font-medium text-primary hover:underline"
+          >
+            {record.email}
+          </Link>
+        </div>
+      ),
+    },
+    {
+      title: "Delivery Address",
+      key: "delivery_address",
+      render: (_text, record) => (
+        <h6
+          className="line-clamp-2 max-w-64 text-sm font-medium text-primary"
+          title={record.address_line}
+        >
+          {record.address_line}
+        </h6>
+      ),
+      width: 250,
+    },
+    {
+      title: "Location",
+      key: "is_inside_dhaka",
+      render: (_text, record) => (
+        <h6 className="text-sm font-medium text-primary">
+          {record.is_inside_dhaka ? "Inside Dhaka" : "Outside Dhaka"}
+        </h6>
+      ),
+    },
+    {
+      title: <div className="text-center">Payment Method</div>,
+      key: "payment_method",
+      render: (_text, record) => (
+        <div>
+          <h6 className="text-center text-sm font-medium text-primary">
+            {formatText(record.payment?.payment_method)}
+          </h6>
+          {record.payment?.payment_method !== "CASH_ON_DELIVERY" && (
+            <div className="text-center text-sm font-medium text-primary">
+              TXID: {record.payment?.transaction_id}, Last digits:{" "}
+              {record?.payment?.last_4_digit}
+            </div>
+          )}
+        </div>
+      ),
+      width: 300,
+    },
+    {
+      title: <div className="text-center">Total Price</div>,
+      key: "total_price",
+      render: (_text, record) => (
+        <h3 className="text-center font-semibold text-primary">
+          {record.grand_total} Tk.
+        </h3>
+      ),
+    },
+    {
+      title: <div className="text-center">Payment Status</div>,
+      key: "payment_status",
+      render: (_text, record) => (
+        <div className="flex justify-center">
+          <Select
+            size="small"
+            className="w-32"
+            options={paymentStatusOptions}
+            value={paymentStatusOptions.find(
+              (item) => item.value === record.payment?.status,
+            )}
+            placeholder="Select Payment Status"
+            onChange={(value) => {
+              {
+                console.log(value);
+              }
+            }}
+          />
+        </div>
+      ),
+    },
+    {
+      title: <div className="text-center">Order Status</div>,
+      key: "order_status",
+      render: (_text, record) => (
+        <div className="flex justify-center">
+          <Select
+            size="small"
+            name="Order Status"
+            className="w-32"
+            options={orderStatusOptions}
+            value={orderStatusOptions.find(
+              (item) => item.value === record?.status,
+            )}
+            placeholder="Select Order Status"
+            onChange={(value) => {
+              {
+                console.log(value);
+              }
+            }}
+          />
+        </div>
+      ),
+    },
+  ];
+
+  const handleTableChange = (_pagination, _filters, sorter) => {
+    const { order, columnKey } = sorter;
+
+    setParams((prev) => ({
+      ...prev,
+      sort_by: columnKey || "created_at",
+      sort_order:
+        order === "ascend" ? "asc" : order === "descend" ? "desc" : "desc",
+    }));
+  };
+
+  // rowSelection objects indicates the need for row selection
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      console.log(
+        `selectedRowKeys: ${selectedRowKeys}`,
+        "selectedRows: ",
+        selectedRows,
+      );
+    },
+    onSelect: (record, selected, selectedRows) => {
+      console.log(record, selected, selectedRows);
+    },
+    onSelectAll: (selected, selectedRows, changeRows) => {
+      console.log(selected, selectedRows, changeRows);
+    },
+  };
 
   return (
     <div className="space-y-5">
@@ -89,117 +250,21 @@ export default function Oder() {
         handleSearchChange={handleSearchChange}
         data={data}
       />
-      {orders?.map((order) => (
-        <div key={order.id} className="rounded-md bg-white p-5 shadow">
-          <div className="grid grid-cols-4 gap-5">
-            <div className="space-y-2">
-              <div>
-                <p className="text-xs text-paragraph">Order Info</p>
-                <h3 className="text-lg font-semibold text-primary">
-                  #{order?.order_id}
-                </h3>
-              </div>
-              <div className="flex flex-col space-y-1">
-                <Label
-                  htmlFor="payment_status"
-                  className={"text-xs text-paragraph"}
-                >
-                  Payment Status
-                </Label>
-                <Select
-                  size="small"
-                  className="w-40"
-                  name="payment_status"
-                  options={paymentStatusOptions}
-                  value={paymentStatusOptions.find(
-                    (item) => item.value === order?.payment?.status,
-                  )}
-                  placeholder="Select Payment Status"
-                  onChange={(value) => {
-                    {
-                      console.log(value);
-                    }
-                  }}
-                />
-              </div>
-            </div>
 
-            <div>
-              <p className="text-xs text-paragraph">Customer Info</p>
-              <h6 className="text-lg font-semibold text-primary">
-                {order?.customer_name}
-              </h6>
+      <Table
+        bordered
+        dataSource={dataSource}
+        columns={columns}
+        loading={isLoading}
+        pagination={false}
+        scroll={{
+          x: "max-content",
+        }}
+        rowSelection={rowSelection}
+        rowKey={(record) => record.id}
+        onChange={handleTableChange}
+      />
 
-              <div className="space-y-1">
-                <Link
-                  href={`mailto:${order?.email}`}
-                  target="_blank"
-                  className="flex w-fit items-center gap-1 text-sm font-medium text-primary hover:underline"
-                >
-                  <Mail size={16} className="text-paragraph" />
-                  {order?.email}
-                </Link>
-
-                <Link
-                  href={`tel:${order?.phone}`}
-                  target="_blank"
-                  className="flex w-fit items-center gap-1 text-sm font-medium text-primary hover:underline"
-                >
-                  <Phone size={16} className="text-paragraph" />
-                  {order?.phone}
-                </Link>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div>
-                <p className="text-xs text-paragraph">Delivery Address</p>
-                <h6 className="line-clamp-2 w-10/12 text-sm font-medium text-primary">
-                  {order?.address_line}
-                </h6>
-              </div>
-              <div>
-                <p className="text-xs text-paragraph">Payment Method</p>
-                <h6 className="line-clamp-2 text-sm font-medium text-primary">
-                  {formatText(order?.payment?.payment_method)}
-                </h6>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div>
-                <p className="text-xs text-paragraph">Price Info</p>
-                <h3 className="text-lg font-semibold text-primary">
-                  {order?.grand_total} Tk.
-                </h3>
-              </div>
-              <div className="flex flex-col space-y-1">
-                <Label
-                  htmlFor="Order Status"
-                  className={"text-xs text-paragraph"}
-                >
-                  Order Status
-                </Label>
-                <Select
-                  size="small"
-                  name="Order Status"
-                  className="w-40"
-                  options={orderStatusOptions}
-                  value={orderStatusOptions.find(
-                    (item) => item.value === order?.status,
-                  )}
-                  placeholder="Select Order Status"
-                  onChange={(value) => {
-                    {
-                      console.log(value);
-                    }
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      ))}
       {!isLoading && (
         <Pagination
           current={params.page}

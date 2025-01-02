@@ -1,3 +1,4 @@
+import { Badge } from "antd";
 import {
   LayoutDashboard,
   KeyRound,
@@ -147,17 +148,32 @@ export const paymentStatusOptions = [
   {
     key: "1",
     value: "PENDING",
-    label: "Pending",
+    label: (
+      <div className="flex items-center gap-2">
+        <p style={{ color: "gold" }}>●</p>
+        Pending
+      </div>
+    ),
   },
   {
     key: "2",
     value: "SUCCESS",
-    label: "Success",
+    label: (
+      <div className="flex items-center gap-2">
+        <p style={{ color: "green" }}>●</p>
+        Success
+      </div>
+    ),
   },
   {
     key: "3",
     value: "FAILED",
-    label: "Failed",
+    label: (
+      <div className="flex items-center gap-2">
+        <p style={{ color: "red" }}>●</p>
+        Failed
+      </div>
+    ),
   },
 ];
 
@@ -165,26 +181,51 @@ export const orderStatusOptions = [
   {
     key: "1",
     value: "PENDING",
-    label: "Pending",
+    label: (
+      <div className="flex items-center gap-2">
+        <p style={{ color: "gold" }}>●</p>
+        Pending
+      </div>
+    ),
   },
   {
     key: "2",
     value: "CONFIRMED",
-    label: "Confirmed",
+    label: (
+      <div className="flex items-center gap-2">
+        <p style={{ color: "yellowgreen" }}>●</p>
+        Confirmed
+      </div>
+    ),
   },
   {
     key: "3",
     value: "SHIPPED",
-    label: "Shipped",
+    label: (
+      <div className="flex items-center gap-2">
+        <p style={{ color: "blue" }}>●</p>
+        Shipped
+      </div>
+    ),
   },
   {
     key: "4",
     value: "DELIVERED",
-    label: "Delivered",
+    label: (
+      <div className="flex items-center gap-2">
+        <p style={{ color: "green" }}>●</p>
+        Delivered
+      </div>
+    ),
   },
   {
     key: "5",
     value: "CANCELLED",
-    label: "Cancelled",
+    label: (
+      <div className="flex items-center gap-2">
+        <p style={{ color: "red" }}>●</p>
+        Cancelled
+      </div>
+    ),
   },
 ];
