@@ -27,6 +27,7 @@ import { Image as ImageIcon } from "lucide-react";
 import ManageImageModal from "./_components/manage-image-modal";
 import { useGetCategoriesListQuery } from "@/redux/api/categoryApi";
 import ManageStockModal from "./_components/manage-stock-modal";
+import defaultProductImage from "@/public/images/default/default_product.jpg";
 import { toast } from "sonner";
 
 const breadcrumbItems = [
@@ -196,7 +197,7 @@ export default function Product() {
                     })
                     .map((image) => image.image_url)
                 : [
-                    "https://res.cloudinary.com/dl5rlskcv/image/upload/v1732000963/default-product_ilbqau.jpg",
+                    "https://res.cloudinary.com/dl5rlskcv/image/upload/v1735927164/default-product_o9po6f.jpg",
                   ]
             }
           >
@@ -204,7 +205,7 @@ export default function Product() {
               src={
                 record.images?.find((image) => image.type === "PRIMARY")
                   ?.image_url ||
-                "https://res.cloudinary.com/dl5rlskcv/image/upload/v1732000963/default-product_ilbqau.jpg"
+                "https://res.cloudinary.com/dl5rlskcv/image/upload/v1735927164/default-product_o9po6f.jpg"
               }
               alt={record.name}
               width={50}

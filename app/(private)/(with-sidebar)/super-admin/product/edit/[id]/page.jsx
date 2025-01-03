@@ -74,6 +74,7 @@ export default function CreateProduct({ params: { id } }) {
     onSubmit: async (values) => {
       const payload = {
         ...values,
+        youtube_video_link: values.youtube_video_link || "",
         buy_price: parseFloat(values.buy_price),
         cost_price: parseFloat(values.cost_price),
         sell_price: parseFloat(values.sell_price),
