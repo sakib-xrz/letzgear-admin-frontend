@@ -71,6 +71,24 @@ export default function OderSearchFilter({
                     allowClear
                   />
                 </div>
+                <div className="flex w-full flex-col gap-2">
+                  <Label htmlFor="is_inside_dhaka">
+                    Select Inside or Outside Dhaka
+                  </Label>
+                  <Select
+                    name="is_inside_dhaka"
+                    value={params.is_inside_dhaka}
+                    onChange={(value) =>
+                      setParams({ ...params, is_inside_dhaka: value })
+                    }
+                    options={[
+                      { key: "1", label: "Inside Dhaka", value: "true" },
+                      { key: "2", label: "Outside Dhaka", value: "false" },
+                    ]}
+                    placeholder="Filter by payment status"
+                    allowClear
+                  />
+                </div>
               </div>
             </div>
           )}

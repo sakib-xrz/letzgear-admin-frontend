@@ -27,6 +27,8 @@ export function sanitizeParams(params) {
     }
   }
 
+  console.log(sanitizedObj);
+
   return sanitizedObj;
 }
 

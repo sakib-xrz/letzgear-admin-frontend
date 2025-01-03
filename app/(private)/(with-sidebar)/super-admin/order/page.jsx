@@ -9,8 +9,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import OderSearchFilter from "./_components/order-search-filter";
-import { CreditCard, Eye, House, Mail, Phone } from "lucide-react";
-import Label from "@/components/shared/label";
 import { orderStatusOptions, paymentStatusOptions } from "@/utils/constant";
 
 const items = [
@@ -32,6 +30,7 @@ export default function Oder() {
     search: searchParams.get("search") || "",
     status: searchParams.get("status") || null,
     payment_status: searchParams.get("payment_status") || null,
+    is_inside_dhaka: searchParams.get("is_inside_dhaka") || null,
     sort_by: searchParams.get("sort_by") || "created_at",
     sort_order: searchParams.get("sort_order") || "desc",
     page: Number(searchParams.get("page")) || 1,
@@ -99,13 +98,16 @@ export default function Oder() {
           >
             {record.phone}
           </Link>
-          <Link
-            href={`mailto:${record.email}`}
-            target="_blank"
-            className="block w-fit truncate text-sm font-medium text-primary hover:underline"
-          >
-            {record.email}
-          </Link>
+          <div className="line-clamp-1 w-40">
+            <Link
+              href={`mailto:${record.email}`}
+              target="_blank"
+              className="block text-sm font-medium text-primary hover:underline"
+              title={record.email}
+            >
+              {record.email}
+            </Link>
+          </div>
         </div>
       ),
     },
@@ -147,7 +149,7 @@ export default function Oder() {
           )}
         </div>
       ),
-      width: 300,
+      width: 280,
     },
     {
       title: <div className="text-center">Total Price</div>,
@@ -203,6 +205,20 @@ export default function Oder() {
         </div>
       ),
     },
+    {
+      title: <div className="text-center">Action</div>,
+      key: "action",
+      render: (_text, record) => (
+        <p
+          className="cursor-pointer text-center text-info hover:underline"
+          onClick={() => {
+            console.log(record);
+          }}
+        >
+          Details
+        </p>
+      ),
+    },
   ];
 
   const handleTableChange = (_pagination, _filters, sorter) => {
@@ -217,21 +233,21 @@ export default function Oder() {
   };
 
   // rowSelection objects indicates the need for row selection
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows,
-      );
-    },
-    onSelect: (record, selected, selectedRows) => {
-      console.log(record, selected, selectedRows);
-    },
-    onSelectAll: (selected, selectedRows, changeRows) => {
-      console.log(selected, selectedRows, changeRows);
-    },
-  };
+  // const rowSelection = {
+  //   onChange: (selectedRowKeys, selectedRows) => {
+  //     console.log(
+  //       `selectedRowKeys: ${selectedRowKeys}`,
+  //       "selectedRows: ",
+  //       selectedRows,
+  //     );
+  //   },
+  //   onSelect: (record, selected, selectedRows) => {
+  //     console.log(record, selected, selectedRows);
+  //   },
+  //   onSelectAll: (selected, selectedRows, changeRows) => {
+  //     console.log(selected, selectedRows, changeRows);
+  //   },
+  // };
 
   return (
     <div className="space-y-5">
@@ -260,7 +276,7 @@ export default function Oder() {
         scroll={{
           x: "max-content",
         }}
-        rowSelection={rowSelection}
+        // rowSelection={rowSelection}
         rowKey={(record) => record.id}
         onChange={handleTableChange}
       />
