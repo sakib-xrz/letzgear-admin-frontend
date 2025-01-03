@@ -31,6 +31,7 @@ export default function Oder() {
     status: searchParams.get("status") || null,
     payment_status: searchParams.get("payment_status") || null,
     is_inside_dhaka: searchParams.get("is_inside_dhaka") || null,
+    platform: searchParams.get("platform") || null,
     sort_by: searchParams.get("sort_by") || "created_at",
     sort_order: searchParams.get("sort_order") || "desc",
     page: Number(searchParams.get("page")) || 1,
@@ -125,11 +126,11 @@ export default function Oder() {
       width: 250,
     },
     {
-      title: "Location",
-      key: "is_inside_dhaka",
+      title: <div className="text-center">Platform</div>,
+      key: "platform",
       render: (_text, record) => (
-        <h6 className="text-sm font-medium text-primary">
-          {record.is_inside_dhaka ? "Inside Dhaka" : "Outside Dhaka"}
+        <h6 className="text-center text-sm font-medium text-primary">
+          {formatText(record.platform)}
         </h6>
       ),
     },
@@ -152,7 +153,7 @@ export default function Oder() {
       width: 280,
     },
     {
-      title: <div className="text-center">Total Price</div>,
+      title: <div className="text-center">Price</div>,
       key: "total_price",
       render: (_text, record) => (
         <h3 className="text-center font-semibold text-primary">

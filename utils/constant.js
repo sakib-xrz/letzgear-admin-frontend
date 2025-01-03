@@ -180,11 +180,11 @@ export const paymentStatusOptions = [
 export const orderStatusOptions = [
   {
     key: "1",
-    value: "PENDING",
+    value: "PLACED",
     label: (
       <div className="flex items-center gap-2">
-        <p style={{ color: "gold" }}>●</p>
-        Pending
+        <p style={{ color: "grey" }}>●</p>
+        Placed
       </div>
     ),
   },
@@ -210,6 +210,16 @@ export const orderStatusOptions = [
   },
   {
     key: "4",
+    value: "PENDING",
+    label: (
+      <div className="flex items-center gap-2">
+        <p style={{ color: "gold" }}>●</p>
+        Pending
+      </div>
+    ),
+  },
+  {
+    key: "5",
     value: "DELIVERED",
     label: (
       <div className="flex items-center gap-2">
@@ -219,7 +229,7 @@ export const orderStatusOptions = [
     ),
   },
   {
-    key: "5",
+    key: "6",
     value: "CANCELLED",
     label: (
       <div className="flex items-center gap-2">
@@ -227,5 +237,33 @@ export const orderStatusOptions = [
         Cancelled
       </div>
     ),
+  },
+];
+
+export const platformOptions = [
+  {
+    key: "1",
+    value: "WEBSITE",
+    label: "Website",
+  },
+  {
+    key: "2",
+    value: "FACEBOOK",
+    label: "Facebook",
+  },
+  {
+    key: "3",
+    value: "WHATSAPP",
+    label: "WhatsApp",
+  },
+  {
+    key: "4",
+    value: "INSTAGRAM",
+    label: "Instagram",
+  },
+  {
+    key: "5",
+    value: "PHONE",
+    label: "Phone",
   },
 ];

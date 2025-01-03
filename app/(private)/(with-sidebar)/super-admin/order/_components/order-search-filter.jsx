@@ -1,6 +1,10 @@
 import Label from "@/components/shared/label";
 import useDesktop from "@/hooks/use-desktop";
-import { orderStatusOptions, paymentStatusOptions } from "@/utils/constant";
+import {
+  orderStatusOptions,
+  paymentStatusOptions,
+  platformOptions,
+} from "@/utils/constant";
 import { Button, Input, Select } from "antd";
 import { SlidersHorizontal, X } from "lucide-react";
 import { useState } from "react";
@@ -86,6 +90,19 @@ export default function OderSearchFilter({
                       { key: "2", label: "Outside Dhaka", value: "false" },
                     ]}
                     placeholder="Filter by payment status"
+                    allowClear
+                  />
+                </div>
+                <div className="flex w-full flex-col gap-2">
+                  <Label htmlFor="platform">Select Platform Type</Label>
+                  <Select
+                    name="platform"
+                    value={params.platform}
+                    onChange={(value) =>
+                      setParams({ ...params, platform: value })
+                    }
+                    options={platformOptions}
+                    placeholder="Filter by platform"
                     allowClear
                   />
                 </div>
